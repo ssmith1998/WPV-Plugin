@@ -1,0 +1,19 @@
+{
+    "name": "sean/wp-vue",
+    "description": "Wordpress plugin built with vue",
+    "autoload": {
+        "psr-4": {
+            "WPV\\Admin\\": "admin/",
+            "WPV\\Frontend\\": "frontend/",
+            "WPV\\Includes\\": "includes/",
+            "WPV\\Api\\": "api/"
+        }
+    },
+    "authors": [
+        {
+            "name": "sean smith",
+            "email": "smith.sean1998@gmail.com"
+        }
+    ],
+    "require": {}
+}
