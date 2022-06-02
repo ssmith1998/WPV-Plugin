@@ -1,9 +1,9 @@
 const mix = require( 'laravel-mix' );
 
 
-/**
- * Setup public path to generate assets
- */
+// /**
+//  * Setup public path to generate assets
+//  */
 mix.setPublicPath( 'assets' );
 
 /**
@@ -13,10 +13,10 @@ mix.autoload({
     jquery: [ '$', 'window.jQuery', 'jQuery' ]
 });
 
-/**
- * Compile JavaScript
- */
-mix.js( 'src/admin/admin.js', 'assets/js/admin.js' ).sourceMaps( false ).extract( [ 'vue' ] );
+// /**
+//  * Compile JavaScript
+//  */
+mix.js( 'src/admin/admin.js', 'assets/js/admin.js' ).sourceMaps( false ).extract( [ 'vue' ] ).vue();
 mix.js( 'src/frontend/frontend.js', 'assets/js/frontend.js' ).sourceMaps( false );
 
 /**
