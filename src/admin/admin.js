@@ -2,6 +2,13 @@ import { createApp } from 'vue';
 import { createRouter, createWebHashHistory } from 'vue-router'
 import calendar from './pages/calendar'
 import settings from './pages/settings'
+import BaseNotification from './components/BaseNotification';
+import axios from 'axios';
+
+// axios
+// axios.defaults({
+//     baseUrl: 
+// })
 
 import App from './App.vue';
 const routes = [
@@ -23,4 +30,6 @@ const router = createRouter({
   })
 const app = createApp(App);
 app.use(router);
+app.config.globalProperties.$axios = axios;
+app.component('notify', BaseNotification);
 app.mount('#wpv-admin-app');
