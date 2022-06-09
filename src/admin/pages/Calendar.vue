@@ -1,11 +1,19 @@
 <template>
   <div class="wrapper">
-    <h1 class="pb-1">Calendar</h1>
-    <div class="calendarWrapper py-4">
+    <div class="tabs">
+      <ul class="d-flex w-100 justify-content-around">
+        <li data-id="calendar" class="w-50 text-center text-white me-3" @click="switchTab">Calendar</li>
+        <li data-id="booking" class="w-50 text-center text-white" @click="switchTab">Add Booking</li>
+      </ul>
+    </div>
+    <div data-id="calendar" class="calendarWrapper py-4 tabContent">
+      <h1 class="pb-1">Calendar</h1>
       <Calendar is-expanded class="pb-3" />
     </div>
-    <date-picker v-model="range" is-expanded is-range @click="onGetDate" />
-    <button class="btn btn-primary w-75 mt-3 mx-auto d-block">Save</button>
+    <div data-id="booking" class="pickerWrapper d-none tabContent">
+      <date-picker v-model="range" is-expanded is-range @click="onGetDate" />
+      <button class="btn btn-primary w-75 mt-3 mx-auto d-block">Save</button>
+    </div>
   </div>
 </template>
 
@@ -30,13 +38,41 @@ export default {
     onGetDate() {
       console.log(this.range);
     },
+    switchTab(e) {
+      console.log(e.target.getAttribute('data-id'));
+      const tabId = e.target.getAttribute('data-id');
+      const tabs = document.querySelectorAll('.tabContent');
+      console.log(tabs.length);
+      for (let i = 0; i < tabs.length; i++) {
+        const tabContentId = tabs[i].getAttribute('data-id');
+        console.log(tabContentId);
+        if(tabContentId === tabId) {
+          tabs[i].classList.remove('d-none');
+        }else{
+          tabs[i].classList.add('d-none');
+        }
+        
+      }
+      
+    }
   },
 };
 </script>
 
-<style>
+<style lang="scss">
+
 .wrapper {
   display: flex;
   flex-direction: column;
+}
+
+.tabs {
+  ul{
+    li{
+      background-color: rgb(47, 47, 56);
+      padding: 10px;
+      cursor: pointer;
+    }
+  }
 }
 </style>
