@@ -4,6 +4,8 @@ import calendar from './pages/calendar'
 import settings from './pages/settings'
 import BaseNotification from './components/BaseNotification';
 import axios from 'axios';
+import { SetupCalendar, Calendar, DatePicker } from 'v-calendar';
+import 'v-calendar/dist/style.css';
 
 // axios
 // axios.defaults({
@@ -30,6 +32,9 @@ const router = createRouter({
   })
 const app = createApp(App);
 app.use(router);
+app.use(SetupCalendar, {})
 app.config.globalProperties.$axios = axios;
 app.component('notify', BaseNotification);
+app.component('Calendar', Calendar);
+app.component('date-picker', DatePicker);
 app.mount('#wpv-admin-app');
