@@ -31,8 +31,11 @@ class Admin {
 
     public function loadStyles() {
         wp_register_style('wpv-admin', WPV_PLGUIN_URL . 'assets/css/admin.css');
+        wp_register_style('wpv-admin-BS', WPV_PLUGIN_URL . 'node_modules/bootstrap/dist/css/bootstrap.min.css');
+
 
         wp_enqueue_style('wpv-admin');
+        wp_enqueue_style('wpv-admin-BS');
     }
 
 
