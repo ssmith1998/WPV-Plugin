@@ -2,8 +2,8 @@
   <div class="wrapper">
     <div class="tabs">
       <ul class="d-flex w-100 justify-content-around">
-        <li data-id="calendar" class="w-50 text-center text-white me-3" @click="switchTab">Calendar</li>
-        <li data-id="booking" class="w-50 text-center text-white" @click="switchTab">Add Booking</li>
+        <li data-id="calendar" class="w-50 text-center text-white me-3 tab active" @click="switchTab">Calendar</li>
+        <li data-id="booking" class="w-50 text-center text-white tab" @click="switchTab">Add Booking</li>
       </ul>
     </div>
     <div data-id="calendar" class="calendarWrapper py-4 tabContent">
@@ -38,14 +38,22 @@ export default {
     onGetDate() {
       console.log(this.range);
     },
+    switchActiveTab(event) {
+      const tabs = document.querySelectorAll('.tab');
+      const clickedTab = event.target;
+
+      for (let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+      }
+
+      clickedTab.classList.add('active');
+    },
     switchTab(e) {
-      console.log(e.target.getAttribute('data-id'));
+      this.switchActiveTab(e);
       const tabId = e.target.getAttribute('data-id');
       const tabs = document.querySelectorAll('.tabContent');
-      console.log(tabs.length);
       for (let i = 0; i < tabs.length; i++) {
         const tabContentId = tabs[i].getAttribute('data-id');
-        console.log(tabContentId);
         if(tabContentId === tabId) {
           tabs[i].classList.remove('d-none');
         }else{
@@ -74,5 +82,9 @@ export default {
       cursor: pointer;
     }
   }
+}
+
+.active {
+  background: rgb(35, 35, 106)!important;
 }
 </style>

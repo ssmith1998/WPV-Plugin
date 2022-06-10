@@ -6,6 +6,7 @@ class Admin {
     public function __construct() {
         add_action('admin_menu', [$this, 'admin_menu']);
         add_action('admin_enqueue_scripts', [$this, 'register_scripts_styles']);
+        $this->createDBTables();
     }
 
     public function register_scripts_styles() {
@@ -36,6 +37,19 @@ class Admin {
 
         wp_enqueue_style('wpv-admin');
         wp_enqueue_style('wpv-admin-BS');
+    }
+
+    public function createDBTables() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'calendar';
+        $charset_collate = $wpdb->get_charset_collate();
+        $sql = "CREATE TABLE $table_name (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            new tinyint(1) NOT NULL,
+            PRIMARY KEY  (id)
+          ) $charset_collate;";
+            require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+            dbDelta($sql);
     }
 
 

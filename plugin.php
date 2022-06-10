@@ -91,7 +91,6 @@ use WPV\Includes\Frontend;
     public function init_plugin() {
         // init
         new Admin();
-        // new Frontend();
         new Api();
     }
 
