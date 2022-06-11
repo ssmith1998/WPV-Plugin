@@ -45,7 +45,8 @@ class Admin {
         $charset_collate = $wpdb->get_charset_collate();
         $sql = "CREATE TABLE $table_name (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
-            new tinyint(1) NOT NULL,
+            new tinyint(1) default true NOT NULL,
+            booking_date datetime NOT NULL,
             PRIMARY KEY  (id)
           ) $charset_collate;";
             require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
