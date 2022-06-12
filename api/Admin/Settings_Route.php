@@ -7,6 +7,7 @@ class Settings_Route extends WP_REST_Controller {
 
     protected $namespace;
     protected $rest_base;
+    
 
 
     public function __construct() {
@@ -100,6 +101,14 @@ class Settings_Route extends WP_REST_Controller {
         //     );
 
 
-        return $wpdb->insert_id;
+        return $this->retrieveNewBooking($wpdb->insert_id);
+      }
+
+      public function retrieveNewBooking($id) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'bookings_calendar';
+        $newBooking = $wpdb->get_row( "SELECT * FROM $table WHERE id = $id", ARRAY_A );
+
+        return $newBooking;
       }
 }
