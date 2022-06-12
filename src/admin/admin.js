@@ -8,9 +8,9 @@ import { SetupCalendar, Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/dist/style.css';
 
 // axios
-// axios.defaults({
-//     baseUrl: 
-// })
+const instance = axios.create({
+    baseURL: 'http://localhost:8000/wp-json/wpv/v1/'
+  });
 
 import App from './App.vue';
 const routes = [
@@ -33,7 +33,7 @@ const router = createRouter({
 const app = createApp(App);
 app.use(router);
 app.use(SetupCalendar, {})
-app.config.globalProperties.$axios = axios;
+app.config.globalProperties.$axios = instance;
 app.component('notify', BaseNotification);
 app.component('Calendar', Calendar);
 app.component('date-picker', DatePicker);
