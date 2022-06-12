@@ -46,9 +46,13 @@ class Admin {
         $sql = "CREATE TABLE $table_name (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             new tinyint(1) default true NOT NULL,
-            booking_date date NOT NULL,
-            booking_time time NOT NULL,
+            booking_start_date datetime NOT NULL,
+            booking_end_date datetime NOT NULL,
             accepted tinyint(1) default false NOT NULL,
+            booking_name varchar(255) NOT NULL,
+            email varchar(255) NOT NULL,
+            contact_number varchar(255) NOT NULL,
+            notes varchar(255) NOT NULL,
             PRIMARY KEY  (id)
           ) $charset_collate;";
             require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
