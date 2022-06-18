@@ -7,10 +7,13 @@ class Settings_Route extends WP_REST_Controller {
 
     protected $namespace;
     protected $rest_base;
+    protected $bookingsTable;
     
 
 
     public function __construct() {
+        global $wpdb;
+        $this->bookingsTable = $wpdb->prefix . 'bookings_calendar';
         $this->namespace = 'wpv/v1';
         $this->rest_base = 'bookings';
     }
@@ -27,7 +30,7 @@ class Settings_Route extends WP_REST_Controller {
              [
                  [
                      'methods' => \WP_REST_Server::READABLE,
-                     'callback'=> [$this, 'get_items'],
+                     'callback'=> [$this, 'get_bookings'],
                      'permission_callback' => [$this, 'get_route_access'],
                  ],
                  [
@@ -50,14 +53,12 @@ class Settings_Route extends WP_REST_Controller {
     /**
      * get items callback
      */
-     public function get_items($request) {
-         $response = [
-             'first_name' => 'john',
-             'second_name' => 'doe',
-             'email' => 'doe@joe.com',
-         ];
-
-         return rest_ensure_response($response);
+     public function get_bookings(WP_REST_Request $request) {
+        $bookingTypeQuery = $request->get_param('type');
+        $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery;";
+        $outputType = 'ARRAY_A';
+        $bookings = $this->retrieveBookings($query, $outputType);
+         return $bookings;
      }
 
      /**
@@ -110,5 +111,10 @@ class Settings_Route extends WP_REST_Controller {
         $newBooking = $wpdb->get_row( "SELECT * FROM $table WHERE id = $id", ARRAY_A );
 
         return $newBooking;
+      }
+
+      public function retrieveBookings($query, $outputType = null) {
+          global $wpdb;
+          return $wpdb->get_results($query, $outputType);
       }
 }

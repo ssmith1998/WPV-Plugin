@@ -31,6 +31,7 @@
     </div>
     <div data-id="newBookings" class="newBookings pickerWrapper d-none tabContent">
       <h1 class="pb-1">New Bookings</h1>
+      <toggle label="Show New Bookings" @onChange="getBookings" />
       <new-bookings :bookings="bookings" />
     </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
@@ -83,28 +84,27 @@ export default {
         end: new Date(),
       },
       },
-      bookings: [
-        {
-          id: 1,
-          name: 'hello',
-          last: 'smith',
-          handle: '@smith',
-        },
-        {
-          id: 2,
-          name: 'bye',
-          last: 'smit',
-          handle: '@smit',
-        }
-      ],
+      bookings: [],
     };
   },
   computed: {
     hasError() {
       return !this.form.name || !this.form.email || !this.form.contact_number;
-    }
+    },
   },
   methods: {
+    getBookings(checkedValue = null) {
+        if(checkedValue !== null) {
+            this.$axios.get(`bookings?type=${checkedValue}`).then((response) => {
+                    this.bookings = response.data;
+                
+            });
+        }else{
+            this.$axios.get(`bookings?type=${true}`).then((response) => {
+                    this.bookings = response.data;
+            });  
+        }
+    },
     onSaveBooking() {
      this.form.booking_start = this.form.range.start;
      this.form.booking_end = this.form.range.end;
@@ -136,6 +136,9 @@ export default {
         }
       }
     },
+  },
+  mounted(){
+    this.getBookings()
   },
 };
 </script>
