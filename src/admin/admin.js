@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import { createRouter, createWebHashHistory } from 'vue-router'
 import calendar from './pages/calendar'
 import settings from './pages/settings'
+import NewBookings from './components/NewBookings';
 import BaseNotification from './components/BaseNotification';
 import axios from 'axios';
 import { SetupCalendar, Calendar, DatePicker } from 'v-calendar';
@@ -37,4 +38,5 @@ app.config.globalProperties.$axios = instance;
 app.component('notify', BaseNotification);
 app.component('Calendar', Calendar);
 app.component('date-picker', DatePicker);
+app.component('new-bookings', NewBookings);
 app.mount('#wpv-admin-app');

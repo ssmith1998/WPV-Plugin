@@ -10,6 +10,13 @@
           Calendar
         </li>
         <li
+          data-id="newBookings"
+          class="w-50 text-center text-white tab me-3"
+          @click="switchTab"
+        >
+          New Bookings
+        </li>
+        <li
           data-id="booking"
           class="w-50 text-center text-white tab"
           @click="switchTab"
@@ -22,7 +29,12 @@
       <h1 class="pb-1">Calendar</h1>
       <Calendar is-expanded class="pb-3" />
     </div>
+    <div data-id="newBookings" class="newBookings pickerWrapper d-none tabContent">
+      <h1 class="pb-1">New Bookings</h1>
+      <new-bookings :bookings="bookings" />
+    </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
+      <h1 class="pb-1">Add Booking</h1>
       <date-picker v-model="form.range" is-expanded is-range mode="dateTime" />
       <form class="p-4 w-75 mx-auto">
         <div class="row">
@@ -71,6 +83,20 @@ export default {
         end: new Date(),
       },
       },
+      bookings: [
+        {
+          id: 1,
+          name: 'hello',
+          last: 'smith',
+          handle: '@smith',
+        },
+        {
+          id: 2,
+          name: 'bye',
+          last: 'smit',
+          handle: '@smit',
+        }
+      ],
     };
   },
   computed: {
@@ -80,10 +106,8 @@ export default {
   },
   methods: {
     onSaveBooking() {
-     const dateRange = this.range;
      this.form.booking_start = this.form.range.start;
      this.form.booking_end = this.form.range.end;
-     const formData = this.form;
      console.log(this.form.booking_end);
      this.$axios.post('/bookings', this.form ).then(resp => {
        console.log(resp);
