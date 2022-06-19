@@ -54,8 +54,12 @@ class Settings_Route extends WP_REST_Controller {
      * get items callback
      */
      public function get_bookings(WP_REST_Request $request) {
-        $bookingTypeQuery = $request->get_param('type');
-        $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery;";
+        $bookingTypeQuery = $request->get_param('new');
+        if($bookingTypeQuery === "true"){
+            $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery;";
+        }else{
+            $query = "SELECT * FROM $this->bookingsTable";
+        }
         $outputType = 'ARRAY_A';
         $bookings = $this->retrieveBookings($query, $outputType);
          return $bookings;

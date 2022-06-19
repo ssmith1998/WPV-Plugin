@@ -1,6 +1,6 @@
 <template>
 <div class="wrapper">
-  <table class="table">
+  <table class="table table-hover">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -38,5 +38,7 @@ props: {
 </script>
 
 <style>
-
+tr:hover {
+    cursor: pointer;
+}
 </style>

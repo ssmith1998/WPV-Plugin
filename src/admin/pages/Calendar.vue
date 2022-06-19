@@ -95,12 +95,12 @@ export default {
   methods: {
     getBookings(checkedValue = null) {
         if(checkedValue !== null) {
-            this.$axios.get(`bookings?type=${checkedValue}`).then((response) => {
+            this.$axios.get(`bookings?new=${checkedValue}`).then((response) => {
                     this.bookings = response.data;
                 
             });
         }else{
-            this.$axios.get(`bookings?type=${true}`).then((response) => {
+            this.$axios.get(`bookings?new=${true}`).then((response) => {
                     this.bookings = response.data;
             });  
         }
