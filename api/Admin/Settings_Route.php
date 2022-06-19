@@ -40,6 +40,20 @@ class Settings_Route extends WP_REST_Controller {
                  ],
              ]
                  );
+
+
+            /**
+             * Register Route for updating new column in db
+             */
+            register_rest_route(
+            $this->namespace,
+            'booking/seen/(?P<id>\d+)',
+            array(
+            'methods' => 'POST',
+            'callback' => [$this, 'setBookingAsSeen'],
+            )
+            );
+
      }
 
      /**
@@ -49,6 +63,13 @@ class Settings_Route extends WP_REST_Controller {
          return true;
      }
 
+     public function setBookingAsSeen(WP_REST_Request $request){
+        $bookingId = $request['id'];
+        $data = ['new' => 0];
+        $where = ['id' => $bookingId];
+        $valueTypes = ['%d'];
+        $this->updateBooking($this->bookingsTable, $data, $where, $valueTypes);
+     }
 
     /**
      * get items callback
@@ -120,5 +141,15 @@ class Settings_Route extends WP_REST_Controller {
       public function retrieveBookings($query, $outputType = null) {
           global $wpdb;
           return $wpdb->get_results($query, $outputType);
+      }
+
+      /**
+       * @param string $table
+       */
+      public function updateBooking($table, $data, $where, $dataTypes) {
+        global $wpdb;
+
+        $wpdb->update($table, $data, $where, $dataTypes);
+
       }
 }

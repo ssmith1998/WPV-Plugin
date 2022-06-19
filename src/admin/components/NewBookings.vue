@@ -45,11 +45,17 @@ methods: {
     onRowClick(booking) {
         this.modalOpen = true;
         this.currentBooking = booking;
+        console.log('booking', booking);
+        if(booking.new === "1"){
+            this.$axios.post(`/booking/seen/${booking.id}`, {}).then((response) => {
+                console.log(response);
+            });
+        }
     },
     onFormatDate(date) {
         const dateToFormat = new Date(date);
         return dateToFormat.getDate() + "/" + (dateToFormat.getMonth() + 1) + "/" + dateToFormat.getFullYear() + " " + dateToFormat.getHours() + ":" + dateToFormat.getMinutes();
-    }
+    },
 },
 }
 </script>

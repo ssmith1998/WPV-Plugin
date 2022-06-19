@@ -71,11 +71,12 @@ methods: {
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: rgb(35, 35, 106);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  /* box-shadow: 0 0 1px #2196F3; */
+  box-shadow: rgb(35, 35, 106);
 }
 
 input:checked + .slider:before {

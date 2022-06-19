@@ -14,7 +14,7 @@
           class="w-50 text-center text-white tab me-3"
           @click="switchTab"
         >
-          New Bookings
+          Bookings
         </li>
         <li
           data-id="booking"
@@ -30,7 +30,7 @@
       <Calendar is-expanded class="pb-3" />
     </div>
     <div data-id="newBookings" class="newBookings pickerWrapper d-none tabContent">
-      <h1 class="pb-1">New Bookings</h1>
+      <h1 class="pb-1">Bookings</h1>
       <toggle label="Show New Bookings" @onChange="getBookings" />
       <new-bookings :bookings="bookings" />
     </div>
