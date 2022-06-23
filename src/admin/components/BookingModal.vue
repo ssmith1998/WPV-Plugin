@@ -22,7 +22,7 @@
                         <input type="datetime-local" class="form-control" v-model="endDate">
                     </div>
                     <div class="col-sm-12 my-2">
-                        <button class="btn btn-primary mx-auto d-block w-75" :disabled="!isValid">Update Booking</button>
+                        <button class="btn btn-primary mx-auto d-block w-75" :disabled="!isValid" @click="onUpdateBooking">Update Booking</button>
                     </div>
                 </div>
             </form>
@@ -48,7 +48,15 @@ props: {
 methods: {
     onCloseModal() {
         this.$emit('closeModal');
-    }
+    },
+    onUpdateBooking() {
+        this.booking.booking_start_date = this.startDate;
+        this.booking.booking_end_date = this.endDate;
+        const booking = this.booking
+        this.$axios.put('/bookings', this.booking).then((response) => {
+            console.log("RESPONSE", response);
+        });
+    },
 },
 computed: {
     startDate() {

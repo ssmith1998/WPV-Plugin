@@ -40,7 +40,7 @@ class Settings_Route extends WP_REST_Controller {
                  ],
                  [
                     'methods' => \WP_REST_Server::EDITABLE,
-                    'callback'=> [$this, 'update_booking'],
+                    'callback'=> [$this, 'updateSingleBooking'],
                     'permission_callback' => [$this, 'get_route_access'],
                  ],
              ]
@@ -149,18 +149,21 @@ class Settings_Route extends WP_REST_Controller {
       }
 
       public function updateSingleBooking(WP_REST_Request $request) {
-        $bookingName = sanitize_text_field($request->get_param('name'));
+        $bookingName = sanitize_text_field($request->get_param('booking_name'));
         $email = sanitize_text_field($request->get_param('email'));
         $contactNumber = sanitize_text_field($request->get_param('contact_number'));
         $notes = sanitize_text_field($request->get_param('notes'));
-        $bookingStart = sanitize_text_field($request->get_param('booking_start'));
-        $bookingEnd = sanitize_text_field($request->get_param('booking_end'));
+        $bookingStart = sanitize_text_field($request->get_param('booking_start_date'));
+        $bookingEnd = sanitize_text_field($request->get_param('booking_end_date'));
           $data = [
             'booking_name' => $bookingName,
             'email' => $email,
             'contact_number' => $contactNumber,
-            'booking_start' => $bookingStart,
-            'booking_end' => $bookingStart,
+            'booking_start_date' => $bookingStart,
+            'booking_end_date' => $bookingEnd,
+          ];
+          $where = [
+              'id' => $request['id']
           ];
           $dataTypes = [
             '%s',
@@ -169,7 +172,7 @@ class Settings_Route extends WP_REST_Controller {
             '%s',
             '%s'
           ];
-          $this->updateBooking($this->bookingsTable, $data, [],  $dataTypes);
+         return $this->updateBooking($this->bookingsTable, $data, $where, $dataTypes);
       }
 
       /**
