@@ -22,7 +22,7 @@
     </tr>
   </tbody>
 </table>
-<booking-modal :isOpen="modalOpen" :booking="currentBooking" />
+<booking-modal :isOpen="modalOpen" :booking="currentBooking" @closeModal="modalOpen = false" />
 </div>
 </template>
 
@@ -46,11 +46,11 @@ methods: {
         this.modalOpen = true;
         this.currentBooking = booking;
         console.log('booking', booking);
-        if(booking.new === "1"){
-            this.$axios.post(`/booking/seen/${booking.id}`, {}).then((response) => {
-                console.log(response);
-            });
-        }
+        // if(booking.new === "1"){
+        //     this.$axios.post(`/booking/seen/${booking.id}`, {}).then((response) => {
+        //         console.log(response);
+        //     });
+        // }
     },
     onFormatDate(date) {
         const dateToFormat = new Date(date);

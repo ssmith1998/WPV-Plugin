@@ -18,10 +18,12 @@ class Admin {
         wp_register_script('wpv-manifest', WPV_PLUGIN_URL . 'assets/js/manifest.js', [], rand(), true);
         wp_register_script('wpv-vendor', WPV_PLUGIN_URL . 'assets/js/vendor.js', ['wpv-manifest'], rand(), true);
         wp_register_script('wpv-admin', WPV_PLUGIN_URL . 'assets/js/admin.js', [], rand(), true);
+        wp_register_script('font-awesome', 'https://kit.fontawesome.com/f2e27c939b.js', [], rand(), true);
 
         wp_enqueue_script('wpv-manifest');
         wp_enqueue_script('wpv-vendor');
         wp_enqueue_script('wpv-admin');
+        wp_enqueue_script('font-awesome');
 
         wp_localize_script('wpv-admin', 'wpvadminlocalizer', [
             'adminUrl' => admin_url('/'),
