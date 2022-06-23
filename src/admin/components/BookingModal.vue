@@ -13,13 +13,16 @@
                         <input type="text" class="form-control" v-model="booking.booking_name">
                     </div>
                     <div class="col-sm-12 pb-2">
-                        <input type="phone" class="form-control" v-model="booking.contact_number">
+                        <input type="tel" class="form-control" v-model="booking.contact_number">
                     </div>
                     <div class="col-sm-6">
                         <input type="datetime-local" class="form-control" v-model="startDate">
                     </div>
                     <div class="col-sm-6">
                         <input type="datetime-local" class="form-control" v-model="endDate">
+                    </div>
+                    <div class="col-sm-12 my-2">
+                        <button class="btn btn-primary mx-auto d-block w-75" :disabled="!isValid">Update Booking</button>
                     </div>
                 </div>
             </form>
@@ -58,6 +61,9 @@ computed: {
         const date = new Date(this.booking.booking_end_date);
         const month = date.getMonth() + 1
         return moment(this.booking.booking_end_date).format('YYYY-MM-DD[T]HH:mm:ss');
+    },
+    isValid() {
+        return this.booking.email && this.booking.booking_start_date && this.booking.booking_end_date && this.booking.booking_name && this.booking.contact_number;
     }
 }
 }

@@ -38,6 +38,11 @@ class Settings_Route extends WP_REST_Controller {
                     'callback'=> [$this, 'create_booking'],
                     'permission_callback' => [$this, 'get_route_access'],
                  ],
+                 [
+                    'methods' => \WP_REST_Server::EDITABLE,
+                    'callback'=> [$this, 'update_booking'],
+                    'permission_callback' => [$this, 'get_route_access'],
+                 ],
              ]
                  );
 
@@ -141,6 +146,30 @@ class Settings_Route extends WP_REST_Controller {
       public function retrieveBookings($query, $outputType = null) {
           global $wpdb;
           return $wpdb->get_results($query, $outputType);
+      }
+
+      public function updateSingleBooking(WP_REST_Request $request) {
+        $bookingName = sanitize_text_field($request->get_param('name'));
+        $email = sanitize_text_field($request->get_param('email'));
+        $contactNumber = sanitize_text_field($request->get_param('contact_number'));
+        $notes = sanitize_text_field($request->get_param('notes'));
+        $bookingStart = sanitize_text_field($request->get_param('booking_start'));
+        $bookingEnd = sanitize_text_field($request->get_param('booking_end'));
+          $data = [
+            'booking_name' => $bookingName,
+            'email' => $email,
+            'contact_number' => $contactNumber,
+            'booking_start' => $bookingStart,
+            'booking_end' => $bookingStart,
+          ];
+          $dataTypes = [
+            '%s',
+            '%s',
+            '%d',
+            '%s',
+            '%s'
+          ];
+          $this->updateBooking($this->bookingsTable, $data, [],  $dataTypes);
       }
 
       /**
