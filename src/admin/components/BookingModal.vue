@@ -16,13 +16,13 @@
                         <input type="tel" class="form-control" v-model="booking.contact_number">
                     </div>
                     <div class="col-sm-6">
-                        <input type="datetime-local" class="form-control" v-model="startDate">
+                        <input type="datetime-local" class="form-control" v-model="booking.booking_start_date">
                     </div>
                     <div class="col-sm-6">
-                        <input type="datetime-local" class="form-control" v-model="endDate">
+                        <input type="datetime-local" class="form-control" v-model="booking.booking_end_date">
                     </div>
                     <div class="col-sm-12 my-2">
-                        <button class="btn btn-primary mx-auto d-block w-75" :disabled="!isValid" @click="onUpdateBooking">Update Booking</button>
+                        <button class="btn btn-primary mx-auto d-block w-75" type="button" :disabled="!isValid" @click="onUpdateBooking">Update Booking</button>
                     </div>
                 </div>
             </form>
@@ -45,30 +45,55 @@ props: {
         type: Object
     }
 },
+data() {
+    return {
+        start_date: this.booking.booking_start_date,
+        end_date: this.booking.booking_end_date,
+    }
+},
 methods: {
     onCloseModal() {
         this.$emit('closeModal');
     },
     onUpdateBooking() {
-        this.booking.booking_start_date = this.startDate;
-        this.booking.booking_end_date = this.endDate;
-        const booking = this.booking
-        this.$axios.put('/bookings', this.booking).then((response) => {
+        let booking = this.booking;
+        this.$axios.put('/bookings', booking).then((response) => {
+            this.onCloseModal();
+             Swal.fire({
+            title: 'Booking Updated Succesfully',
+            timer: 3000,
+            toast: true,
+            position: 'bottom-end',
+            showConfirmButton: false,
+            icon: 'success',
+            background: 'green',
+            color: '#ffffff'
+        })  
             console.log("RESPONSE", response);
         });
     },
 },
 computed: {
-    startDate() {
-        const date = new Date(this.booking.booking_start_date);
-        const month = date.getMonth() + 1
-        return moment(this.booking.booking_start_date).format('YYYY-MM-DD[T]HH:mm:ss');
-        // return date.getFullYear() + '-' + (date.getMonth() < 10 ? '0' + month: date.getMonth() + 1) + '-' + date.getDate() + date.getHours() + ':' + date.getMinutes();
+    startDate: {
+        get(){
+            const date = new Date(this.booking.booking_start_date);
+            const month = date.getMonth() + 1
+            return moment(this.booking.booking_start_date).format('YYYY-MM-DD[T]HH:mm:ss');
+            // return date.getFullYear() + '-' + (date.getMonth() < 10 ? '0' + month: date.getMonth() + 1) + '-' + date.getDate() + date.getHours() + ':' + date.getMinutes();
+        },
+        set(value) {
+            moment(value).format('YYYY-MM-DD[T]HH:mm:ss');
+        }
     },
-     endDate() {
-        const date = new Date(this.booking.booking_end_date);
-        const month = date.getMonth() + 1
-        return moment(this.booking.booking_end_date).format('YYYY-MM-DD[T]HH:mm:ss');
+     endDate: {
+         get(){
+             const date = new Date(this.booking.booking_end_date);
+             const month = date.getMonth() + 1
+             return moment(this.booking.booking_end_date).format('YYYY-MM-DD[T]HH:mm:ss');
+         },
+         set(value){
+            moment(value).format('YYYY-MM-DD[T]HH:mm:ss');
+         }
     },
     isValid() {
         return this.booking.email && this.booking.booking_start_date && this.booking.booking_end_date && this.booking.booking_name && this.booking.contact_number;

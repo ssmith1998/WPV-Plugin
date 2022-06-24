@@ -13,7 +13,7 @@
   </thead>
   <tbody v-if="bookings.length > 0">
     <tr v-for="(booking, index) in bookings" :key="index" @click="onRowClick(booking)">
-      <th scope="row">{{index + 1}}</th>
+      <th scope="row">{{booking.id}}</th>
       <td>{{onFormatDate(booking.booking_start_date)}}</td>
       <td>{{onFormatDate(booking.booking_end_date)}}</td>
       <td>{{booking.email}}</td>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
 name: 'NewBookings',
 props: {
@@ -46,6 +47,8 @@ methods: {
         this.modalOpen = true;
         this.currentBooking = booking;
         console.log('booking', booking);
+        this.currentBooking.booking_start_date = moment(this.currentBooking.booking_start_date).format('YYYY-MM-DD[T]HH:mm:ss');
+        this.currentBooking.booking_end_date = moment(this.currentBooking.booking_end_date).format('YYYY-MM-DD[T]HH:mm:ss');
         // if(booking.new === "1"){
         //     this.$axios.post(`/booking/seen/${booking.id}`, {}).then((response) => {
         //         console.log(response);

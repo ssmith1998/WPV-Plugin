@@ -111,6 +111,16 @@ export default {
      console.log(this.form.booking_end);
      this.$axios.post('/bookings', this.form ).then(resp => {
        console.log(resp);
+       Swal.fire({
+        title: 'Booking Created Succesfully',
+        timer: 3000,
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        icon: 'success',
+        background: 'green',
+        color: '#ffffff'
+      })
      })
     },
     switchActiveTab(event) {
