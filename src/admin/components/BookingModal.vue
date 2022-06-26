@@ -74,27 +74,6 @@ methods: {
     },
 },
 computed: {
-    startDate: {
-        get(){
-            const date = new Date(this.booking.booking_start_date);
-            const month = date.getMonth() + 1
-            return moment(this.booking.booking_start_date).format('YYYY-MM-DD[T]HH:mm:ss');
-            // return date.getFullYear() + '-' + (date.getMonth() < 10 ? '0' + month: date.getMonth() + 1) + '-' + date.getDate() + date.getHours() + ':' + date.getMinutes();
-        },
-        set(value) {
-            moment(value).format('YYYY-MM-DD[T]HH:mm:ss');
-        }
-    },
-     endDate: {
-         get(){
-             const date = new Date(this.booking.booking_end_date);
-             const month = date.getMonth() + 1
-             return moment(this.booking.booking_end_date).format('YYYY-MM-DD[T]HH:mm:ss');
-         },
-         set(value){
-            moment(value).format('YYYY-MM-DD[T]HH:mm:ss');
-         }
-    },
     isValid() {
         return this.booking.email && this.booking.booking_start_date && this.booking.booking_end_date && this.booking.booking_name && this.booking.contact_number;
     }

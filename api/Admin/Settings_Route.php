@@ -81,12 +81,31 @@ class Settings_Route extends WP_REST_Controller {
      */
      public function get_bookings(WP_REST_Request $request) {
         $bookingTypeQuery = $request->get_param('new');
+        if (!isset($request['per_page']) ) {  
+            $per_page = 10;  
+        } else {  
+            $per_page = $request['per_page'];  
+        }
+        if (!isset($request['page']) ) {  
+            $page = 1;  
+        } else {  
+            $page = $request['page'];  
+        }  
+        $page_first_result = ($page-1) * $per_page;  
+        $outputType = 'ARRAY_A';
         if($bookingTypeQuery === "true"){
-            $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery;";
+            $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery";
         }else{
             $query = "SELECT * FROM $this->bookingsTable";
         }
-        $outputType = 'ARRAY_A';
+        $bookingsAll = $this->retrieveBookings($query, $outputType);
+        $bookingsCount = COUNT($bookingsAll);
+        $number_of_pages = ceil ($bookingsCount / $per_page);  
+        if($bookingTypeQuery === "true"){
+            $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery LIMIT $page_first_result , $per_page";
+        }else{
+            $query = "SELECT * FROM $this->bookingsTable LIMIT $page_first_result, $per_page";
+        }
         $bookings = $this->retrieveBookings($query, $outputType);
          return $bookings;
      }

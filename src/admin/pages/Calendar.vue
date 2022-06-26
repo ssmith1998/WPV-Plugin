@@ -73,6 +73,7 @@ export default {
   name: "calendar",
   data() {
     return {
+      per_page: 10,
       date: new Date(),
       form: {
         name: "",
@@ -95,12 +96,12 @@ export default {
   methods: {
     getBookings(checkedValue = null) {
         if(checkedValue !== null) {
-            this.$axios.get(`bookings?new=${checkedValue}`).then((response) => {
+            this.$axios.get(`bookings?per_page=${this.per_page}&page=${1}&new=${checkedValue}`).then((response) => {
                     this.bookings = response.data;
                 
             });
         }else{
-            this.$axios.get(`bookings?new=${true}`).then((response) => {
+            this.$axios.get(`bookings?per_page=${this.per_page}&page=${1}&new=${true}`).then((response) => {
                     this.bookings = response.data;
             });  
         }
