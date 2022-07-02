@@ -63,11 +63,12 @@ methods: {
         console.log('booking', booking);
         this.currentBooking.booking_start_date = moment(this.currentBooking.booking_start_date).format('YYYY-MM-DD[T]HH:mm:ss');
         this.currentBooking.booking_end_date = moment(this.currentBooking.booking_end_date).format('YYYY-MM-DD[T]HH:mm:ss');
-        // if(booking.new === "1"){
-        //     this.$axios.post(`/booking/seen/${booking.id}`, {}).then((response) => {
-        //         console.log(response);
-        //     });
-        // }
+        if(booking.new === "1"){
+            console.log('yes');
+            this.$axios.post(`/booking/seen/${booking.id}`, {}).then((response) => {
+                console.log(response);
+            });
+        }
     },
     onFormatDate(date) {
         const dateToFormat = new Date(date);

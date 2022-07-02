@@ -99,7 +99,8 @@ export default {
   methods: {
     onShowNew(checkVal) {
       this.showNew = checkVal;
-      this.getBookings()
+      this.currentPage = 1;
+      this.getBookings();
     },
     onPageChange(page) {
       this.currentPage = page;

@@ -1,9 +1,9 @@
 <template>
   <nav v-if="pages" class="paginationWrapper">
     <ul class="pagination">
-    <li v-if="currentPage !== 1" class="page-item"><a class="page-link" href="#" @click="onChangePage(currentPage - 1)">Previous</a></li>
+    <li  :class="currentPage !== 1 ? 'page-item' : 'page-item disabled'"><a class="page-link" href="#" @click="onChangePage(currentPage - 1)">Previous</a></li>
     <li v-for="index in pages" :key="index" @click="onChangePage(index)" class="page-item"><a :class="currentPage === index ? 'page-link active': 'page-link'" href="#">{{index}}</a></li>
-    <li v-if="currentPage !== pages" class="page-item"><a class="page-link" href="#" @click="onChangePage(currentPage + 1)">Next</a></li>
+    <li :class="currentPage !== pages ? 'page-item' : 'page-item disabled'"><a class="page-link" href="#" @click="onChangePage(currentPage + 1)">Next</a></li>
   </ul>
   </nav>
 </template>
@@ -36,6 +36,9 @@ mounted() {
 <style>
 .active {
     background-color: rgb(35, 35, 106);
-    color: #ffffff;
+    color: #ffffff!important;
+}
+.page-link{
+    color: #23236a;
 }
 </style>
