@@ -14,7 +14,7 @@
           class="w-50 text-center text-white tab me-3"
           @click="switchTab"
         >
-          Bookings
+          ({{bookingsCount}}) Bookings
         </li>
         <li
           data-id="booking"
@@ -78,6 +78,7 @@ export default {
       pages: 0,
       currentPage: 1,
       showNew: true,
+      bookingsCount: 0,
       form: {
         name: "",
         email: "",
@@ -111,6 +112,11 @@ export default {
             this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${this.showNew}`).then((response) => {
                     this.bookings = response.data.bookings;
                     this.pages = response.data.number_of_pages;
+                    const newBookings = this.bookings.filter((booking) => {
+                      return booking.new === "1";
+                    });
+                    console.log(newBookings);
+                    this.bookingsCount = newBookings.length;
                 
             });
         // }else{
