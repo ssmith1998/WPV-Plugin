@@ -31,8 +31,8 @@
     </div>
     <div data-id="newBookings" class="newBookings pickerWrapper d-none tabContent">
       <h1 class="pb-1">Bookings</h1>
-      <toggle label="Show New Bookings" @onChange="getBookings" />
-      <new-bookings :bookings="bookings" />
+      <toggle label="Show New Bookings" @onChange="onShowNew" :shownew="showNew" />
+      <new-bookings :bookings="bookings" :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" />
     </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
       <h1 class="pb-1">Add Booking</h1>
@@ -75,6 +75,9 @@ export default {
     return {
       per_page: 10,
       date: new Date(),
+      pages: 0,
+      currentPage: 1,
+      showNew: true,
       form: {
         name: "",
         email: "",
@@ -94,17 +97,28 @@ export default {
     },
   },
   methods: {
-    getBookings(checkedValue = null) {
-        if(checkedValue !== null) {
-            this.$axios.get(`bookings?per_page=${this.per_page}&page=${1}&new=${checkedValue}`).then((response) => {
-                    this.bookings = response.data;
+    onShowNew(checkVal) {
+      this.showNew = checkVal;
+      this.getBookings()
+    },
+    onPageChange(page) {
+      this.currentPage = page;
+      this.getBookings();
+    },
+    getBookings() {
+        // if(checkedValue !== null) {
+            this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${this.showNew}`).then((response) => {
+                    this.bookings = response.data.bookings;
+                    this.pages = response.data.number_of_pages;
                 
             });
-        }else{
-            this.$axios.get(`bookings?per_page=${this.per_page}&page=${1}&new=${true}`).then((response) => {
-                    this.bookings = response.data;
-            });  
-        }
+        // }else{
+        //     this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${true}`).then((response) => {
+        //             this.bookings = response.data.bookings;
+        //             this.pages = response.data.number_of_pages;
+
+        //     });  
+        // }
     },
     onSaveBooking() {
      this.form.booking_start = this.form.range.start;
@@ -150,6 +164,7 @@ export default {
   },
   mounted(){
     this.getBookings()
+    console.log('Pages',this.pages);
   },
 };
 </script>

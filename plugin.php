@@ -32,6 +32,7 @@ use WPV\Includes\Frontend;
      */
     public function __construct() {
         $this->plugin_constants();
+        $this->plugin_services();
         register_activation_hook( __FILE__, [ $this, 'activate' ] );
         register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
         add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
@@ -47,6 +48,14 @@ use WPV\Includes\Frontend;
         define( 'WPV_PLUGIN_URL', trailingslashit( plugins_url( '', __FILE__ ) ) );
         define( 'WPV_NONCE', 'b?le*;K7.T2jk_*(+3&[G[xAc8O~Fv)2T/Zk9N:GKBkn$piN0.N%N~X91VbCn@.4' );
     }
+
+    /**
+     * Plugin Services
+     */
+
+     public function plugin_services(){
+
+     }
 
     /**
      * Singletone Instance

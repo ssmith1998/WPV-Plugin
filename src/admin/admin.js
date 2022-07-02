@@ -6,6 +6,7 @@ import NewBookings from './components/NewBookings';
 import BaseNotification from './components/BaseNotification';
 import BookingModal from './components/BookingModal'
 import Toggle from './components/Toggle';
+import pagination from './components/Pagination';
 import axios from 'axios';
 import { SetupCalendar, Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/dist/style.css';
@@ -43,4 +44,5 @@ app.component('date-picker', DatePicker);
 app.component('new-bookings', NewBookings);
 app.component('booking-modal', BookingModal);
 app.component('toggle', Toggle);
+app.component('pagination', pagination);
 app.mount('#wpv-admin-app');

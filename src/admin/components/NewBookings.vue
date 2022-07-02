@@ -22,27 +22,41 @@
     </tr>
   </tbody>
 </table>
+<pagination v-if="pages" :pages="pages" @pageChange="onPageChange" :currentPage="currentPage" />
 <booking-modal :isOpen="modalOpen" :booking="currentBooking" @closeModal="modalOpen = false" />
 </div>
 </template>
 
 <script>
 import moment from 'moment';
+import Pagination from './Pagination.vue';
 export default {
+  components: { Pagination },
 name: 'NewBookings',
 props: {
     bookings: {
         type: Array,
         default: [],
     },
+    pages: {
+        type: Number,
+        required: true,
+    },
+    currentPage: {
+        type: Number,
+        default: 1,
+    }
 },
 data(){
     return {
         modalOpen: false,
-        currentBooking: {}
+        currentBooking: {},
     }
 },
 methods: {
+    onPageChange(page) {
+        this.$emit('pageChange', page);
+    },
     onRowClick(booking) {
         this.modalOpen = true;
         this.currentBooking = booking;

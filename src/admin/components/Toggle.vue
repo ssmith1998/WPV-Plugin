@@ -21,12 +21,20 @@ props: {
         type: String,
         default: 'Label Here'
     },
+    showNew: {
+        type: Boolean,
+        default: true,
+    },
 },
 methods: {
     onToggle() {
+        this
        this.$emit('onChange', this.checkVal);
     },
 },
+mounted() {
+    this.checkVal = this.showNew;
+}
 }
 </script>
 

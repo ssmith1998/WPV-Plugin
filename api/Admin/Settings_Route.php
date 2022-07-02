@@ -3,12 +3,12 @@ namespace WPV\Api\Admin;
 use WP_REST_Controller;
 use WP_REST_Request;
 
+
 class Settings_Route extends WP_REST_Controller {
 
     protected $namespace;
     protected $rest_base;
-    protected $bookingsTable;
-    
+    protected $bookingsTable;   
 
 
     public function __construct() {
@@ -16,6 +16,7 @@ class Settings_Route extends WP_REST_Controller {
         $this->bookingsTable = $wpdb->prefix . 'bookings_calendar';
         $this->namespace = 'wpv/v1';
         $this->rest_base = 'bookings';
+
     }
 
 
@@ -80,18 +81,34 @@ class Settings_Route extends WP_REST_Controller {
      * get items callback
      */
      public function get_bookings(WP_REST_Request $request) {
+         /**
+          * get the query for all or new bookings
+          */
         $bookingTypeQuery = $request->get_param('new');
+        /**
+         * check for per_page in request 
+         */
         if (!isset($request['per_page']) ) {  
             $per_page = 10;  
         } else {  
             $per_page = $request['per_page'];  
         }
+        /**
+         * Check for page in request
+         */
         if (!isset($request['page']) ) {  
             $page = 1;  
         } else {  
             $page = $request['page'];  
         }  
+        /**
+         * get the first result of page formula
+         */
         $page_first_result = ($page-1) * $per_page;  
+
+        /**
+         * Get the total bookings count
+         */
         $outputType = 'ARRAY_A';
         if($bookingTypeQuery === "true"){
             $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery";
@@ -100,14 +117,23 @@ class Settings_Route extends WP_REST_Controller {
         }
         $bookingsAll = $this->retrieveBookings($query, $outputType);
         $bookingsCount = COUNT($bookingsAll);
+        /**
+         * Find the number of pages based on results
+         */
         $number_of_pages = ceil ($bookingsCount / $per_page);  
+        /**
+         * get the bookings from db and return 
+         */
         if($bookingTypeQuery === "true"){
             $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery LIMIT $page_first_result , $per_page";
         }else{
             $query = "SELECT * FROM $this->bookingsTable LIMIT $page_first_result, $per_page";
         }
         $bookings = $this->retrieveBookings($query, $outputType);
-         return $bookings;
+         return array(
+             'number_of_pages' => $number_of_pages,
+             'bookings' => $bookings
+         );
      }
 
      /**
