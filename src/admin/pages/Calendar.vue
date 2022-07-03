@@ -27,12 +27,12 @@
     </div>
     <div data-id="calendar" class="calendarWrapper py-4 tabContent">
       <h1 class="pb-1">Calendar</h1>
-      <Calendar is-expanded class="pb-3" />
+      <bookings-calendar />
     </div>
     <div data-id="newBookings" class="newBookings pickerWrapper d-none tabContent">
       <h1 class="pb-1">Bookings</h1>
       <toggle label="Show New Bookings" @onChange="onShowNew" :shownew="showNew" />
-      <new-bookings :bookings="bookings" :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" />
+      <new-bookings :bookings="bookings" :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" />
     </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
       <h1 class="pb-1">Add Booking</h1>
@@ -69,7 +69,9 @@
 </template>
 
 <script>
+import BookingsCalendar from '../components/BookingsCalendar.vue';
 export default {
+  components: { BookingsCalendar },
   name: "calendar",
   data() {
     return {
@@ -98,6 +100,9 @@ export default {
     },
   },
   methods: {
+    onUpdateBookingsCount() {
+      this.bookingsCount = this.bookingsCount - 1;
+    },
     onShowNew(checkVal) {
       this.showNew = checkVal;
       this.currentPage = 1;
@@ -108,24 +113,12 @@ export default {
       this.getBookings();
     },
     getBookings() {
-        // if(checkedValue !== null) {
             this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${this.showNew}`).then((response) => {
                     this.bookings = response.data.bookings;
                     this.pages = response.data.number_of_pages;
-                    const newBookings = this.bookings.filter((booking) => {
-                      return booking.new === "1";
-                    });
-                    console.log(newBookings);
-                    this.bookingsCount = newBookings.length;
+                    this.bookingsCount = response.data.newBookings;
                 
             });
-        // }else{
-        //     this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${true}`).then((response) => {
-        //             this.bookings = response.data.bookings;
-        //             this.pages = response.data.number_of_pages;
-
-        //     });  
-        // }
     },
     onSaveBooking() {
      this.form.booking_start = this.form.range.start;
@@ -170,7 +163,7 @@ export default {
     },
   },
   mounted(){
-    this.getBookings()
+    this.getBookings();
     console.log('Pages',this.pages);
   },
 };

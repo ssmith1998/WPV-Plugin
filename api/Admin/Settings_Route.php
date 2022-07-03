@@ -60,6 +60,18 @@ class Settings_Route extends WP_REST_Controller {
             )
             );
 
+              /**
+             * Register Route for updating new column in db
+             */
+            register_rest_route(
+                $this->namespace,
+                'bookings/calendar',
+                array(
+                'methods' => 'GET',
+                'callback' => [$this, 'bookingsCalendar'],
+                )
+                );
+
      }
 
      /**
@@ -75,6 +87,17 @@ class Settings_Route extends WP_REST_Controller {
         $where = ['id' => $bookingId];
         $valueTypes = ['%d'];
         $this->updateBooking($this->bookingsTable, $data, $where, $valueTypes);
+
+        return $bookingId;
+     }
+
+     public function bookingsCalendar(WP_REST_Request $request) {
+        $outputType = 'ARRAY_A';
+        $query = "SELECT * FROM $this->bookingsTable";
+        $bookingsAll = $this->retrieveBookings($query, $outputType);
+
+        return $bookingsAll;
+
      }
 
     /**
@@ -130,9 +153,13 @@ class Settings_Route extends WP_REST_Controller {
             $query = "SELECT * FROM $this->bookingsTable LIMIT $page_first_result, $per_page";
         }
         $bookings = $this->retrieveBookings($query, $outputType);
+        $newBookings = array_filter($bookingsAll, function($booking) {
+            return $booking['new'] === "1";
+        });
          return array(
              'number_of_pages' => $number_of_pages,
-             'bookings' => $bookings
+             'bookings' => $bookings,
+             'newBookings' => COUNT($newBookings)
          );
      }
 

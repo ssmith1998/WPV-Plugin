@@ -67,7 +67,19 @@ methods: {
             console.log('yes');
             this.$axios.post(`/booking/seen/${booking.id}`, {}).then((response) => {
                 console.log(response);
+                this.onUpdateNewBooking(response.data);
             });
+        }
+    },
+    onUpdateNewBooking(bookingId) {
+        console.log('bookingID', bookingId);
+        const index = this.bookings.findIndex((item) => {
+           return item.id == bookingId;
+        });
+        console.log('INDEX', index);
+        if(index !== -1) {
+            this.bookings[index].new = 0;
+            this.$emit('updateNewBookingsCount');
         }
     },
     onFormatDate(date) {
