@@ -36,7 +36,13 @@
     </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
       <h1 class="pb-1">Add Booking</h1>
-      <date-picker v-model="form.range" is-expanded is-range mode="dateTime" />
+      <date-picker 
+      :disabled-dates="disabled"
+      v-model="form.range" 
+      is-expanded 
+      is-range 
+      mode="dateTime"
+       />
       <form class="p-4 w-75 mx-auto">
         <div class="row">
           <div class="col-sm-6 pb-2">
@@ -81,6 +87,7 @@ export default {
       currentPage: 1,
       showNew: true,
       bookingsCount: 0,
+      disabledDates: [],
       form: {
         name: "",
         email: "",
@@ -97,6 +104,12 @@ export default {
   computed: {
     hasError() {
       return !this.form.name || !this.form.email || !this.form.contact_number;
+    },
+    disabled(){
+      return this.disabledDates.map(booking => ({
+        start: new Date(booking.booking_start_date), 
+        end: new Date(booking.booking_end_date),
+      }));
     },
   },
   methods: {
@@ -164,6 +177,14 @@ export default {
   },
   mounted(){
     this.getBookings();
+    /**
+     * Fetching disabled dates
+     */
+     this.$axios.get('bookings/calendar').then((response) => {
+      console.log(response);
+      this.disabledDates = response.data;
+      console.log(this.dates);
+    });
     console.log('Pages',this.pages);
   },
 };
