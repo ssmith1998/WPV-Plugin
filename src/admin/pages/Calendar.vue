@@ -37,7 +37,7 @@
     <div data-id="booking" class="pickerWrapper d-none tabContent">
       <h1 class="pb-1">Add Booking</h1>
       <date-picker 
-      :disabled-dates="disabled"
+      :disabled-dates="disabledDates"
       v-model="form.range" 
       is-expanded 
       is-range 
@@ -105,12 +105,12 @@ export default {
     hasError() {
       return !this.form.name || !this.form.email || !this.form.contact_number;
     },
-    disabled(){
-      return this.disabledDates.map(booking => ({
-        start: new Date(booking.booking_start_date), 
-        end: new Date(booking.booking_end_date),
-      }));
-    },
+    // disabled(){
+    //   return this.disabledDates.map(booking => ({
+    //     start: new Date(booking.booking_start_date), 
+    //     end: new Date(booking.booking_end_date),
+    //   }));
+    // },
   },
   methods: {
     onUpdateBookingsCount() {
@@ -139,6 +139,12 @@ export default {
      console.log(this.form.booking_end);
      this.$axios.post('/bookings', this.form ).then(resp => {
        console.log(resp);
+       this.bookingsCount = this.bookingsCount + 1;
+       this.disabledDates.push({
+        start: new Date(resp.data.booking_start_date), 
+        end: new Date(resp.data.booking_end_date),
+      })
+      this.bookings.push(resp.data);
        Swal.fire({
         title: 'Booking Created Succesfully',
         timer: 3000,
@@ -182,8 +188,11 @@ export default {
      */
      this.$axios.get('bookings/calendar').then((response) => {
       console.log(response);
-      this.disabledDates = response.data;
-      console.log(this.dates);
+      this.disabledDates = response.data.map(booking => ({
+        start: new Date(booking.booking_start_date), 
+        end: new Date(booking.booking_end_date),
+      }));
+      console.log('DISABLED', this.disabledDates);
     });
     console.log('Pages',this.pages);
   },
