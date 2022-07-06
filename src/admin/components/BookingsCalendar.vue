@@ -1,6 +1,5 @@
 <template>
       <Calendar
-      v-if="dates"
       :attributes="dates"
        is-expanded 
        class="pb-3" 
@@ -18,7 +17,6 @@ data() {
 props: {
     bookings: {
         type: Array,
-        default: [],
     }
 },
 // computed: {
@@ -44,6 +42,8 @@ mounted() {
     //                 console.log(this.dates);
     //         });
 
+    console.log('DATES', this.bookings)
+
     this.dates = this.bookings.map(booking => ({
         key: `booking.${booking.id}`,
         highlight: true,
@@ -56,7 +56,7 @@ mounted() {
         customData: booking,
       }));
 
-      console.log('DATES', this.bookings)
+      
 }
 }
 </script>

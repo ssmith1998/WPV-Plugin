@@ -27,7 +27,7 @@
     </div>
     <div data-id="calendar" class="calendarWrapper py-4 tabContent">
       <h1 class="pb-1">Calendar</h1>
-      <bookings-calendar v-if="calendarBookings" :bookings="calendarBookings" />
+      <bookings-calendar v-if="loaded" :bookings="calendarBookings" />
     </div>
     <div data-id="newBookings" class="newBookings pickerWrapper d-none tabContent">
       <h1 class="pb-1">Bookings</h1>
@@ -82,6 +82,7 @@ export default {
   name: "calendar",
   data() {
     return {
+      loaded: false,
       per_page: 10,
       date: new Date(),
       pages: 0,
@@ -127,10 +128,8 @@ export default {
       this.currentPage = page;
       this.getBookings();
     },
-    onGetCalendarBookings() {
-      this.$axios.get('bookings/calendar').then((response) => {
-                    this.calendarBookings = response.data;
-            });
+    async onGetCalendarBookings() {
+      return await this.$axios.get('bookings/calendar');
     },
     getBookings() {
             this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${this.showNew}`).then((response) => {
@@ -168,17 +167,8 @@ export default {
       })
       this.bookings.push(resp.data);
       this.form = {}
-      this.calendarBookings.push({
-         key: `booking.${resp.data.id}`,
-        highlight: true,
-        highlight: {
-            start: { fillMode: 'outline' },
-            base: { fillMode: 'light' },
-            end: { fillMode: 'outline' },
-        },
-        dates: {start: bookingStartDate, end: bookingEndDate},
-        customData: resp.data,
-      })
+      this.calendarBookings.push(resp.data);
+      console.log('calendar', this.calendarBookings);
     },
     switchActiveTab(event) {
       const tabs = document.querySelectorAll(".tab");
@@ -204,9 +194,11 @@ export default {
       }
     },
   },
-  mounted(){
+  async mounted(){
     this.getBookings();
-    this.onGetCalendarBookings()
+    const response = await this.onGetCalendarBookings();
+    this.calendarBookings = response.data;
+    this.loaded = true;
     /**
      * Fetching disabled dates
      */
