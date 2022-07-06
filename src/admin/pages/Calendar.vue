@@ -27,7 +27,7 @@
     </div>
     <div data-id="calendar" class="calendarWrapper py-4 tabContent">
       <h1 class="pb-1">Calendar</h1>
-      <bookings-calendar />
+      <bookings-calendar v-if="calendarBookings" :bookings="calendarBookings" />
     </div>
     <div data-id="newBookings" class="newBookings pickerWrapper d-none tabContent">
       <h1 class="pb-1">Bookings</h1>
@@ -76,6 +76,7 @@
 
 <script>
 import BookingsCalendar from '../components/BookingsCalendar.vue';
+import moment from 'moment';
 export default {
   components: { BookingsCalendar },
   name: "calendar",
@@ -88,6 +89,7 @@ export default {
       showNew: true,
       bookingsCount: 0,
       disabledDates: [],
+      calendarBookings: [],
       form: {
         name: "",
         email: "",
@@ -125,6 +127,11 @@ export default {
       this.currentPage = page;
       this.getBookings();
     },
+    onGetCalendarBookings() {
+      this.$axios.get('bookings/calendar').then((response) => {
+                    this.calendarBookings = response.data;
+            });
+    },
     getBookings() {
             this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${this.showNew}`).then((response) => {
                     this.bookings = response.data.bookings;
@@ -134,20 +141,14 @@ export default {
             });
     },
     onSaveBooking() {
-     this.form.booking_start = this.form.range.start;
-     this.form.booking_end = this.form.range.end;
-     console.log(this.form.booking_end);
+     this.form.booking_start = moment(this.form.range.start).add(1, 'hours').toDate();
+     this.form.booking_end = moment(this.form.range.end).add(1, 'hours').toDate();
+     console.log(this.form);
      this.$axios.post('/bookings', this.form ).then(resp => {
-       console.log(resp);
-       this.bookingsCount = this.bookingsCount + 1;
-       this.disabledDates.push({
-        start: new Date(resp.data.booking_start_date), 
-        end: new Date(resp.data.booking_end_date),
-      })
-      this.bookings.push(resp.data);
+       this.onUpdateState(resp);
        Swal.fire({
         title: 'Booking Created Succesfully',
-        timer: 3000,
+        timer: 6000,
         toast: true,
         position: 'bottom-end',
         showConfirmButton: false,
@@ -156,6 +157,28 @@ export default {
         color: '#ffffff'
       })
      })
+    },
+    onUpdateState(resp) {
+      this.bookingsCount = this.bookingsCount + 1;
+      const bookingStartDate = moment(resp.data.booking_start_date).add(1,'hours').toDate();
+      const bookingEndDate = moment(resp.data.booking_end_date).add(1,'hours').toDate();
+       this.disabledDates.push({
+        start: bookingStartDate, 
+        end: bookingEndDate,
+      })
+      this.bookings.push(resp.data);
+      this.form = {}
+      this.calendarBookings.push({
+         key: `booking.${resp.data.id}`,
+        highlight: true,
+        highlight: {
+            start: { fillMode: 'outline' },
+            base: { fillMode: 'light' },
+            end: { fillMode: 'outline' },
+        },
+        dates: {start: bookingStartDate, end: bookingEndDate},
+        customData: resp.data,
+      })
     },
     switchActiveTab(event) {
       const tabs = document.querySelectorAll(".tab");
@@ -183,6 +206,7 @@ export default {
   },
   mounted(){
     this.getBookings();
+    this.onGetCalendarBookings()
     /**
      * Fetching disabled dates
      */

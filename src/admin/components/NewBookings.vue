@@ -83,7 +83,7 @@ methods: {
         }
     },
     onFormatDate(date) {
-        const dateToFormat = new Date(date);
+        const dateToFormat = moment(date).toDate();
         return dateToFormat.getDate() + "/" + (dateToFormat.getMonth() + 1) + "/" + dateToFormat.getFullYear() + " " + dateToFormat.getHours() + ":" + dateToFormat.getMinutes();
     },
 },
