@@ -23,7 +23,7 @@
   </tbody>
 </table>
 <pagination v-if="pages" :pages="pages" @pageChange="onPageChange" :currentPage="currentPage" />
-<booking-modal :isOpen="modalOpen" :booking="currentBooking" @closeModal="modalOpen = false" />
+<booking-modal :isOpen="modalOpen" :booking="currentBooking" @closeModal="modalOpen = false" @updatedCalendars="onUpdateCalendars" />
 </div>
 </template>
 
@@ -54,6 +54,9 @@ data(){
     }
 },
 methods: {
+    onUpdateCalendars(booking) {
+        this.$emit('updateBookingCalendars', booking);
+    },
     onPageChange(page) {
         this.$emit('pageChange', page);
     },

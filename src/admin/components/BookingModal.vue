@@ -70,6 +70,7 @@ methods: {
             color: '#ffffff'
         })  
             console.log("RESPONSE", response);
+            this.$emit('updatedCalendars', response.data);
         });
     },
 },

@@ -244,7 +244,9 @@ class Settings_Route extends WP_REST_Controller {
             '%s',
             '%s'
           ];
-         return $this->updateBooking($this->bookingsTable, $data, $where, $dataTypes);
+          $this->updateBooking($this->bookingsTable, $data, $where, $dataTypes);
+
+          return $this->retrieveNewBooking($request['id']);
       }
 
       /**

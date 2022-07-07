@@ -27,12 +27,16 @@
     </div>
     <div data-id="calendar" class="calendarWrapper py-4 tabContent">
       <h1 class="pb-1">Calendar</h1>
-      <bookings-calendar v-if="loaded" :bookings="calendarBookings" />
+      <Calendar
+      :attributes="calendarBookings"
+       is-expanded 
+       class="pb-3" 
+       />
     </div>
     <div data-id="newBookings" class="newBookings pickerWrapper d-none tabContent">
       <h1 class="pb-1">Bookings</h1>
       <toggle label="Show New Bookings" @onChange="onShowNew" :shownew="showNew" />
-      <new-bookings :bookings="bookings" :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" />
+      <new-bookings :bookings="bookings" :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" @updateBookingCalendars="onUpdateCalendars" />
     </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
       <h1 class="pb-1">Add Booking</h1>
@@ -75,10 +79,8 @@
 </template>
 
 <script>
-import BookingsCalendar from '../components/BookingsCalendar.vue';
 import moment from 'moment';
 export default {
-  components: { BookingsCalendar },
   name: "calendar",
   data() {
     return {
@@ -139,6 +141,44 @@ export default {
                 
             });
     },
+    onUpdateCalendars(booking) {
+      /**
+       * Updating new bookings calendar
+       */
+      const disable = {
+        id: booking.id,
+        start: new Date(booking.booking_start_date), 
+        end: new Date(booking.booking_end_date),
+      };
+      const indexDisabled = this.disabledDates.findIndex((item) => {
+        return item.id === booking.id
+      })
+      if(indexDisabled !== -1) {
+        this.disabledDates[indexDisabled] = Object.assign(this.disabledDates[indexDisabled], disable);
+      }
+
+      /**
+       * updating main calendar
+       */
+      const calendarBooking = {
+        key: booking.id,
+        highlight: true,
+        highlight: {
+            start: { fillMode: 'outline' },
+            base: { fillMode: 'light' },
+            end: { fillMode: 'outline' },
+        },
+        dates: {start: new Date(booking.booking_start_date), end: new Date(booking.booking_end_date)},
+        customData: booking,
+      }
+      console.log(this.calendarBookings);
+      const indexCalendar = this.calendarBookings.findIndex((item) => {
+        return item.key === booking.id
+      })
+      if(indexCalendar !== -1) {
+        this.calendarBookings[indexCalendar] = Object.assign(this.calendarBookings[indexCalendar], calendarBooking);
+      }
+    },
     onSaveBooking() {
      this.form.booking_start = moment(this.form.range.start).add(1, 'hours').toDate();
      this.form.booking_end = moment(this.form.range.end).add(1, 'hours').toDate();
@@ -167,7 +207,17 @@ export default {
       })
       this.bookings.push(resp.data);
       this.form = {}
-      this.calendarBookings.push(resp.data);
+      this.calendarBookings.push({
+        key: resp.data.id,
+        highlight: true,
+        highlight: {
+            start: { fillMode: 'outline' },
+            base: { fillMode: 'light' },
+            end: { fillMode: 'outline' },
+        },
+        dates: {start: new Date(resp.data.booking_start_date), end: new Date(resp.data.booking_end_date)},
+        customData: resp.data,
+      });
       console.log('calendar', this.calendarBookings);
     },
     switchActiveTab(event) {
@@ -197,7 +247,17 @@ export default {
   async mounted(){
     this.getBookings();
     const response = await this.onGetCalendarBookings();
-    this.calendarBookings = response.data;
+    this.calendarBookings = response.data.map(booking => ({
+      key: booking.id,
+        highlight: true,
+        highlight: {
+            start: { fillMode: 'outline' },
+            base: { fillMode: 'light' },
+            end: { fillMode: 'outline' },
+        },
+        dates: {start: new Date(booking.booking_start_date), end: new Date(booking.booking_end_date)},
+        customData: booking,
+    }));
     this.loaded = true;
     /**
      * Fetching disabled dates
@@ -205,6 +265,7 @@ export default {
      this.$axios.get('bookings/calendar').then((response) => {
       console.log(response);
       this.disabledDates = response.data.map(booking => ({
+        id: booking.id,
         start: new Date(booking.booking_start_date), 
         end: new Date(booking.booking_end_date),
       }));
