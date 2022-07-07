@@ -145,6 +145,7 @@ export default {
       /**
        * Updating new bookings calendar
        */
+      console.log(this.disabledDates);
       const disable = {
         id: booking.id,
         start: new Date(booking.booking_start_date), 
@@ -171,7 +172,6 @@ export default {
         dates: {start: new Date(booking.booking_start_date), end: new Date(booking.booking_end_date)},
         customData: booking,
       }
-      console.log(this.calendarBookings);
       const indexCalendar = this.calendarBookings.findIndex((item) => {
         return item.key === booking.id
       })
@@ -202,6 +202,7 @@ export default {
       const bookingStartDate = moment(resp.data.booking_start_date).add(1,'hours').toDate();
       const bookingEndDate = moment(resp.data.booking_end_date).add(1,'hours').toDate();
        this.disabledDates.push({
+        id: resp.data.id,
         start: bookingStartDate, 
         end: bookingEndDate,
       })
