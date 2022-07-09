@@ -35,8 +35,11 @@
     </div>
     <div data-id="newBookings" class="newBookings pickerWrapper d-none tabContent">
       <h1 class="pb-1">Bookings</h1>
-      <toggle label="Show New Bookings" @onChange="onShowNew" :shownew="showNew" />
-      <new-bookings :bookings="bookings" :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" @updateBookingCalendars="onUpdateCalendars" />
+      <div class="filters d-flex">
+        <toggle label="Show New Bookings" @onChange="onShowNew" :shownew="showNew" />
+        <button style="background:rgb(35, 35, 106);" @click="filterDrawerOpen = !filterDrawerOpen" class="ms-2 border p-2 border-none text-white"><i class="fas fa-filter"></i></button>
+      </div>
+      <new-bookings :filterDrawerOpen="filterDrawerOpen" :bookings="bookings" :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" @updateBookingCalendars="onUpdateCalendars" @filter="onFilterBookings" />
     </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
       <h1 class="pb-1">Add Booking</h1>
@@ -93,6 +96,8 @@ export default {
       bookingsCount: 0,
       disabledDates: [],
       calendarBookings: [],
+      filterDrawerOpen: false,
+      filters: '',
       form: {
         name: "",
         email: "",
@@ -118,6 +123,10 @@ export default {
     // },
   },
   methods: {
+    onFilterBookings(filters) {
+      this.filters = filters;
+      this.getBookings();
+    },
     onUpdateBookingsCount() {
       this.bookingsCount = this.bookingsCount - 1;
     },
@@ -134,7 +143,7 @@ export default {
       return await this.$axios.get('bookings/calendar');
     },
     getBookings() {
-            this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${this.showNew}`).then((response) => {
+            this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${this.showNew}&${this.filters}`).then((response) => {
                     this.bookings = response.data.bookings;
                     this.pages = response.data.number_of_pages;
                     this.bookingsCount = response.data.newBookings;

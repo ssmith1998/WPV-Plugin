@@ -147,6 +147,8 @@ class Settings_Route extends WP_REST_Controller {
         /**
          * get the bookings from db and return 
          */
+        $queryFilters = $this->buildQuery($request, $page_first_result, $per_page);
+
         if($bookingTypeQuery === "true"){
             $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery LIMIT $page_first_result , $per_page";
         }else{
@@ -161,6 +163,24 @@ class Settings_Route extends WP_REST_Controller {
              'bookings' => $bookings,
              'newBookings' => COUNT($newBookings)
          );
+     }
+
+     public function buildQuery(WP_REST_Request $request, $first_result, $per_page):String {
+        $dateStart = $request['date_start'];
+        $dateEnd = $request['date_end'];
+        $email = $request['email'];
+        $name = $request['name'];
+        $contactNumber = $request['contact_number'];
+        $new = $request['new'];
+        $query = '';
+
+        if($new === "true"){
+            $query = "SELECT * FROM $this->bookingsTable WHERE new = $new AND WHERE booking_start_date <= $dateStart AND WHERE booking_end_date >= $dateEnd AND WHERE email = $email AND WHERE booking_name = $name AND WHERE contact_number = $contactNumber LIMIT $page_first_result , $per_page";
+        }else{
+            $query = "SELECT * FROM $this->bookingsTable  LIMIT $page_first_result, $per_page";
+        }
+
+        return $query;
      }
 
      /**
