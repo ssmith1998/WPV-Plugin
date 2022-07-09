@@ -2,6 +2,7 @@
 namespace WPV\Api\Admin;
 use WP_REST_Controller;
 use WP_REST_Request;
+use Datetime;
 
 
 class Settings_Route extends WP_REST_Controller {
@@ -130,13 +131,22 @@ class Settings_Route extends WP_REST_Controller {
         $page_first_result = ($page-1) * $per_page;  
 
         /**
+         * vars
+         */
+        $dateStart = $request['date_start'];
+        $dateEnd = $request['date_end'];
+        $email = $request['email'];
+        $name = $request['name'];
+        $contactNumber = $request['contact_number'];
+
+        /**
          * Get the total bookings count
          */
         $outputType = 'ARRAY_A';
         if($bookingTypeQuery === "true"){
-            $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery";
+            $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery AND DATE(booking_start_date) >= '$dateStart' AND DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%'";
         }else{
-            $query = "SELECT * FROM $this->bookingsTable";
+            $query = "SELECT * FROM $this->bookingsTable WHERE DATE(booking_start_date) >= '$dateStart' AND DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%'";
         }
         $bookingsAll = $this->retrieveBookings($query, $outputType);
         $bookingsCount = COUNT($bookingsAll);
@@ -147,13 +157,13 @@ class Settings_Route extends WP_REST_Controller {
         /**
          * get the bookings from db and return 
          */
-        $queryFilters = $this->buildQuery($request, $page_first_result, $per_page);
+        $query = $this->buildQuery($request, $page_first_result, $per_page);
 
-        if($bookingTypeQuery === "true"){
-            $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery LIMIT $page_first_result , $per_page";
-        }else{
-            $query = "SELECT * FROM $this->bookingsTable LIMIT $page_first_result, $per_page";
-        }
+        // if($bookingTypeQuery === "true"){
+        //     $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery LIMIT $page_first_result , $per_page";
+        // }else{
+        //     $query = "SELECT * FROM $this->bookingsTable LIMIT $page_first_result, $per_page";
+        // }
         $bookings = $this->retrieveBookings($query, $outputType);
         $newBookings = array_filter($bookingsAll, function($booking) {
             return $booking['new'] === "1";
@@ -168,6 +178,7 @@ class Settings_Route extends WP_REST_Controller {
      public function buildQuery(WP_REST_Request $request, $first_result, $per_page):String {
         $dateStart = $request['date_start'];
         $dateEnd = $request['date_end'];
+
         $email = $request['email'];
         $name = $request['name'];
         $contactNumber = $request['contact_number'];
@@ -175,9 +186,9 @@ class Settings_Route extends WP_REST_Controller {
         $query = '';
 
         if($new === "true"){
-            $query = "SELECT * FROM $this->bookingsTable WHERE new = $new AND WHERE booking_start_date <= $dateStart AND WHERE booking_end_date >= $dateEnd AND WHERE email = $email AND WHERE booking_name = $name AND WHERE contact_number = $contactNumber LIMIT $page_first_result , $per_page";
+            $query = "SELECT * FROM $this->bookingsTable WHERE new = $new AND DATE(booking_start_date) >= '$dateStart' AND DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%' LIMIT $first_result, $per_page";
         }else{
-            $query = "SELECT * FROM $this->bookingsTable  LIMIT $page_first_result, $per_page";
+            $query = "SELECT * FROM $this->bookingsTable WHERE DATE(booking_start_date) >= '$dateStart' AND DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%' LIMIT $first_result, $per_page";
         }
 
         return $query;

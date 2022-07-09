@@ -255,7 +255,21 @@ export default {
     },
   },
   async mounted(){
+    /**
+     * Bookings Table
+     */
+    const params = new URLSearchParams({
+    date_start: this.filters.date_start,
+    date_end: this.filters.date_end,
+    email: this.filters.email,
+    name: this.filters.name,
+    contact_number: this.filters.contact_number,
+    });
+    this.filters = params.toString();
     this.getBookings();
+    /**
+     * Main Calendar bookings
+     */
     const response = await this.onGetCalendarBookings();
     this.calendarBookings = response.data.map(booking => ({
       key: booking.id,
