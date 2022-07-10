@@ -115,12 +115,6 @@ export default {
     hasError() {
       return !this.form.name || !this.form.email || !this.form.contact_number;
     },
-    // disabled(){
-    //   return this.disabledDates.map(booking => ({
-    //     start: new Date(booking.booking_start_date), 
-    //     end: new Date(booking.booking_end_date),
-    //   }));
-    // },
   },
   methods: {
     onFilterBookings(filters) {
@@ -258,14 +252,6 @@ export default {
     /**
      * Bookings Table
      */
-    const params = new URLSearchParams({
-    date_start: this.filters.date_start,
-    date_end: this.filters.date_end,
-    email: this.filters.email,
-    name: this.filters.name,
-    contact_number: this.filters.contact_number,
-    });
-    this.filters = params.toString();
     this.getBookings();
     /**
      * Main Calendar bookings

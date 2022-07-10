@@ -1,6 +1,7 @@
 <template>
   <div :class="filterOpen ? 'filterDrawer activeDrawer' : 'filterDrawer'">
       <h2 class="text-white text-center pt-5">Filters</h2>
+      <i class="fas fa-times closeDrawer" @click="filterOpen = false"></i>
       <div class="filters px-4">
           <div class="filterItem">
             <label for="date" class="text-white">Date Start</label>
@@ -29,6 +30,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
 name: 'Filter Drawer',
 data() {
@@ -47,6 +49,13 @@ props: {
         type: Boolean,
         default: false,
     },
+},
+mounted() {
+  const date = moment().format('yyyy-MM-DD');
+  const endDate = moment().add(2, 'months').format('yyyy-MM-DD');
+  this.filters.date_start = date;
+  this.filters.date_end = endDate;
+  this.submitFilters();
 },
 methods: {
     submitFilters() {
@@ -78,5 +87,12 @@ methods: {
 .activeDrawer {
     width: 35%;
 
+}
+
+.closeDrawer {
+    color: red;
+    position: relative;
+    top: -38px;
+    left: 400px;
 }
 </style>
