@@ -24,7 +24,6 @@
 </table>
 <pagination v-if="pages" :pages="pages" @pageChange="onPageChange" :currentPage="currentPage" />
 <booking-modal :isOpen="modalOpen" :booking="currentBooking" @closeModal="modalOpen = false" @updatedCalendars="onUpdateCalendars" />
-<filter-drawer :filterOpen="filterDrawerOpen" @filter="onFilter" />
 </div>
 </template>
 
@@ -55,13 +54,11 @@ props: {
 data(){
     return {
         modalOpen: false,
+        filterOpen: this.filterDrawerOpen,
         currentBooking: {},
     }
 },
 methods: {
-    onFilter(filters) {
-        this.$emit('filter', filters);
-    },
     onUpdateCalendars(booking) {
         this.$emit('updateBookingCalendars', booking);
     },

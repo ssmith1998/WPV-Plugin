@@ -1,7 +1,7 @@
 <template>
   <div :class="filterOpen ? 'filterDrawer activeDrawer' : 'filterDrawer'">
       <h2 class="text-white text-center pt-5">Filters</h2>
-      <i class="fas fa-times closeDrawer" @click="filterOpen = false"></i>
+      <i class="fas fa-times closeDrawer" @click="onCloseDrawer"></i>
       <div class="filters px-4">
           <div class="filterItem">
             <label for="date" class="text-white">Date Start</label>
@@ -33,6 +33,11 @@
 import moment from 'moment'
 export default {
 name: 'Filter Drawer',
+props: {
+    filterOpen: {
+        type: Boolean,
+    },
+},
 data() {
     return {
         filters: {
@@ -43,12 +48,6 @@ data() {
             contact_number: '',
         }
     }
-},
-props: {
-    filterOpen: {
-        type: Boolean,
-        default: false,
-    },
 },
 mounted() {
   const date = moment().format('yyyy-MM-DD');
@@ -69,6 +68,9 @@ methods: {
         contact_number: this.filters.contact_number,
         });
         this.$emit('filter', params.toString());
+    },
+    onCloseDrawer() {
+      this.$emit('closeDrawer');
     }
  }
 }

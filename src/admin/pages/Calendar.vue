@@ -39,7 +39,8 @@
         <toggle label="Show New Bookings" @onChange="onShowNew" :shownew="showNew" />
         <button style="background:rgb(35, 35, 106);" @click="filterDrawerOpen = !filterDrawerOpen" class="ms-2 border p-2 border-none text-white"><i class="fas fa-filter"></i></button>
       </div>
-      <new-bookings :filterDrawerOpen="filterDrawerOpen" :bookings="bookings" :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" @updateBookingCalendars="onUpdateCalendars" @filter="onFilterBookings" />
+      <new-bookings :bookings="bookings" :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" @updateBookingCalendars="onUpdateCalendars" />
+      <filter-drawer :filterOpen="filterDrawerOpen" @filter="onFilterBookings" @closeDrawer="filterDrawerOpen = !filterDrawerOpen" />
     </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
       <h1 class="pb-1">Add Booking</h1>
@@ -219,6 +220,9 @@ export default {
             base: { fillMode: 'light' },
             end: { fillMode: 'outline' },
         },
+        popover: {
+                    label: `${resp.data.booking_name} - ${resp.data.email}`
+                },
         dates: {start: new Date(resp.data.booking_start_date), end: new Date(resp.data.booking_end_date)},
         customData: resp.data,
       });
@@ -265,6 +269,9 @@ export default {
             base: { fillMode: 'light' },
             end: { fillMode: 'outline' },
         },
+        popover: {
+            label: `${booking.booking_name} - ${booking.email}`
+          },
         dates: {start: new Date(booking.booking_start_date), end: new Date(booking.booking_end_date)},
         customData: booking,
     }));
