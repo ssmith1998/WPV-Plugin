@@ -9,16 +9,23 @@
       <th scope="col">Email</th>
       <th scope="col">Name</th>
       <th scope="col">Contact Number</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody v-if="bookings.length > 0">
-    <tr v-for="(booking, index) in bookings" :key="index" @click="onRowClick(booking)">
+    <tr v-for="(booking, index) in bookings" :key="index" @click="onRowClick(booking)" :class="{ 'approved' : isAccepted(booking)}">
       <th scope="row">{{booking.id}}</th>
       <td>{{onFormatDate(booking.booking_start_date)}}</td>
       <td>{{onFormatDate(booking.booking_end_date)}}</td>
       <td>{{booking.email}}</td>
       <td>{{booking.booking_name}}</td>
       <td>{{booking.contact_number}}</td>
+      <td>
+          <template v-if="booking.accepted !== '1'">
+            <i @click.stop="onApproveBooking(booking.id)" class="fas fa-check-circle text-success me-3"></i>
+            <i class="fas fa-times-circle text-danger"></i>
+          </template>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -59,6 +66,9 @@ data(){
     }
 },
 methods: {
+    isAccepted(booking) {
+        return booking.accepted === '1' ? true : false
+    },
     onUpdateCalendars(booking) {
         this.$emit('updateBookingCalendars', booking);
     },
@@ -94,12 +104,24 @@ methods: {
         const dateToFormat = moment(date).toDate();
         return dateToFormat.getDate() + "/" + (dateToFormat.getMonth() + 1) + "/" + dateToFormat.getFullYear() + " " + dateToFormat.getHours() + ":" + dateToFormat.getMinutes();
     },
+    async onApproveBooking(bookingId) {
+        const approved = await this.$axios.post(`/bookings/${bookingId}/approve`);
+        console.log(approved);
+    },
 },
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 tr:hover {
     cursor: pointer;
 }
+i {
+    font-size: 25px;
+}
+.approved 
+{
+    background: #3ded97;
+}
+
 </style>

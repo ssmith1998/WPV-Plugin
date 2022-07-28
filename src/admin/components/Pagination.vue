@@ -33,7 +33,7 @@ mounted() {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .active {
     background-color: rgb(35, 35, 106);
     color: #ffffff!important;
@@ -41,4 +41,5 @@ mounted() {
 .page-link{
     color: #23236a;
 }
+
 </style>

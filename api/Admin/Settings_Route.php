@@ -62,7 +62,19 @@ class Settings_Route extends WP_REST_Controller {
             );
 
               /**
-             * Register Route for updating new column in db
+             * Register Route for calendarBookings
+             */
+            register_rest_route(
+                $this->namespace,
+                'bookings/(?P<id>\d+)/approve',
+                array(
+                'methods' => 'POST',
+                'callback' => [$this, 'approveBooking'],
+                )
+                );
+
+            /**
+             * Register Route for calendarBookings
              */
             register_rest_route(
                 $this->namespace,
@@ -99,6 +111,17 @@ class Settings_Route extends WP_REST_Controller {
 
         return $bookingsAll;
 
+     }
+
+     public function approveBooking(WP_REST_Request $request) 
+     {
+        $bookingId = $request['id'];
+        $data = ['accepted' => 1];
+        $where = ['id' => $bookingId];
+        $valueTypes = ['%d'];
+        $this->updateBooking($this->bookingsTable, $data, $where, $valueTypes);
+
+        return $bookingId;
      }
 
     /**
