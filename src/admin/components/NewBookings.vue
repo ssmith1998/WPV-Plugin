@@ -12,8 +12,8 @@
       <th scope="col"></th>
     </tr>
   </thead>
-  <tbody v-if="bookings.length > 0">
-    <tr v-for="(booking, index) in bookings" :key="index" @click="onRowClick(booking)" :class="{ 'approved' : isAccepted(booking)}">
+  <tbody v-if="all.length > 0">
+    <tr v-for="(booking, index) in all" :key="index" @click="onRowClick(booking)" :class="{ 'approved' : isAccepted(booking)}">
       <th scope="row">{{booking.id}}</th>
       <td>{{onFormatDate(booking.booking_start_date)}}</td>
       <td>{{onFormatDate(booking.booking_end_date)}}</td>
@@ -37,14 +37,12 @@
 <script>
 import moment from 'moment';
 import Pagination from './Pagination.vue';
+import { useBookingStore } from '../stores/bookings';
+import { mapState, mapActions } from 'pinia'
 export default {
   components: { Pagination },
 name: 'NewBookings',
 props: {
-    bookings: {
-        type: Array,
-        default: [],
-    },
     pages: {
         type: Number,
         required: true,
@@ -57,6 +55,9 @@ props: {
         type:Boolean,
         default:false,
     },
+},
+computed: {
+ ...mapState(useBookingStore, ['all']),
 },
 data(){
     return {

@@ -13,7 +13,7 @@ export default {
 name: 'Toggle',
 data() {
     return {
-        checkVal: true
+        checkVal: false
     }
 },
 props: {
@@ -21,19 +21,14 @@ props: {
         type: String,
         default: 'Label Here'
     },
-    showNew: {
-        type: Boolean,
-        default: true,
-    },
 },
 methods: {
     onToggle() {
-        this
        this.$emit('onChange', this.checkVal);
     },
 },
 mounted() {
-    this.checkVal = this.showNew;
+       this.$emit('showBookingsNew', this.checkVal);
 }
 }
 </script>

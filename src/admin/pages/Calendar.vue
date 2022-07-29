@@ -14,7 +14,7 @@
           class="w-50 text-center text-white tab me-3"
           @click="switchTab"
         >
-          ({{bookingsCount}}) Bookings
+          ({{bookingCount}}) Bookings
         </li>
         <li
           data-id="booking"
@@ -31,21 +31,22 @@
       :attributes="calendarBookings"
        is-expanded 
        class="pb-3" 
+       v-if="loaded"
        />
     </div>
     <div data-id="newBookings" class="newBookings pickerWrapper d-none tabContent">
       <h1 class="pb-1">Bookings</h1>
       <div class="filters d-flex">
-        <toggle label="Show New Bookings" @onChange="onShowNew" :shownew="showNew" />
+        <toggle label="Show New Bookings" @onChange="onShowNew" @showBookingsNew="showNewBookings" />
         <button style="background:rgb(35, 35, 106);" @click="filterDrawerOpen = !filterDrawerOpen" class="ms-2 border p-2 border-none text-white"><i class="fas fa-filter"></i></button>
       </div>
-      <new-bookings :bookings="bookings" :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" @updateBookingCalendars="onUpdateCalendars" />
+      <new-bookings :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" @updateBookingCalendars="onUpdateCalendars" />
       <filter-drawer :filterOpen="filterDrawerOpen" @filter="onFilterBookings" @closeDrawer="filterDrawerOpen = !filterDrawerOpen" />
     </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
       <h1 class="pb-1">Add Booking</h1>
       <date-picker 
-      :disabled-dates="disabledDates"
+      :disabled-dates="disabledBookings"
       v-model="form.range" 
       is-expanded 
       is-range 
@@ -84,6 +85,10 @@
 
 <script>
 import moment from 'moment';
+import { useBookingStore } from '../stores/bookings';
+import { mapActions, mapState } from 'pinia'
+
+
 export default {
   name: "calendar",
   data() {
@@ -93,10 +98,9 @@ export default {
       date: new Date(),
       pages: 0,
       currentPage: 1,
-      showNew: true,
-      bookingsCount: 0,
+      showNew: false,
+      // bookingsCount: 0,
       disabledDates: [],
-      calendarBookings: [],
       filterDrawerOpen: false,
       filters: '',
       form: {
@@ -113,11 +117,16 @@ export default {
     };
   },
   computed: {
+     ...mapState(useBookingStore, ['all', 'calendarBookings', 'disabledBookings', 'bookingCount']),
     hasError() {
       return !this.form.name || !this.form.email || !this.form.contact_number;
     },
   },
   methods: {
+    ...mapActions(useBookingStore, ['bookingList', 'calendarList', 'disabledList']),
+    showNewBookings(val){
+      this.showNew = val;
+    },
     onFilterBookings(filters) {
       this.filters = filters;
       this.getBookings();
@@ -135,15 +144,33 @@ export default {
       this.getBookings();
     },
     async onGetCalendarBookings() {
-      return await this.$axios.get('bookings/calendar');
+      const calendarBookings = await this.$axios.get('bookings/calendar');
+      console.log('CAL', calendarBookings);
+
+    const bookings = calendarBookings.data.map(booking => ({
+      key: booking.id,
+        highlight: true,
+        highlight: {
+            start: { fillMode: 'outline' },
+            base: { fillMode: 'light' },
+            end: { fillMode: 'outline' },
+        },
+        popover: {
+            label: `${booking.booking_name} - ${booking.email}`
+          },
+        dates: {start: new Date(booking.booking_start_date), end: new Date(booking.booking_end_date)},
+        customData: booking,
+    }));
+    //store action
+    this.calendarList(bookings);
+    this.loaded = true;
     },
-    getBookings() {
-            this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${this.showNew}&${this.filters}`).then((response) => {
-                    this.bookings = response.data.bookings;
-                    this.pages = response.data.number_of_pages;
-                    this.bookingsCount = response.data.newBookings;
-                
-            });
+    async getBookings() {
+        const resp = await this.$axios.get(`bookings?per_page=${this.per_page}&page=${this.currentPage}&new=${this.showNew}&${this.filters}`);
+        // this.bookings = response.data.bookings;
+        this.pages = resp.data.number_of_pages;
+        // this.bookingsCount = response.data.newBookings;
+        this.bookingList(resp.data.bookings); 
     },
     onUpdateCalendars(booking) {
       /**
@@ -252,7 +279,7 @@ export default {
       }
     },
   },
-  async mounted(){
+  async created(){
     /**
      * Bookings Table
      */
@@ -260,34 +287,19 @@ export default {
     /**
      * Main Calendar bookings
      */
-    const response = await this.onGetCalendarBookings();
-    this.calendarBookings = response.data.map(booking => ({
-      key: booking.id,
-        highlight: true,
-        highlight: {
-            start: { fillMode: 'outline' },
-            base: { fillMode: 'light' },
-            end: { fillMode: 'outline' },
-        },
-        popover: {
-            label: `${booking.booking_name} - ${booking.email}`
-          },
-        dates: {start: new Date(booking.booking_start_date), end: new Date(booking.booking_end_date)},
-        customData: booking,
-    }));
-    this.loaded = true;
+    this.onGetCalendarBookings()
     /**
      * Fetching disabled dates
      */
-     this.$axios.get('bookings/calendar').then((response) => {
-      console.log(response);
-      this.disabledDates = response.data.map(booking => ({
+     const response = await this.$axios.get('bookings/calendar');
+      console.log('disabled', response);
+      const disabledDates = response.data.map(booking => ({
         id: booking.id,
         start: new Date(booking.booking_start_date), 
         end: new Date(booking.booking_end_date),
       }));
+      this.disabledList(disabledDates);
       console.log('DISABLED', this.disabledDates);
-    });
     console.log('Pages',this.pages);
   },
 };

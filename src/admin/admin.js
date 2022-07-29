@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import calendar from './pages/calendar'
 import settings from './pages/settings'
@@ -11,7 +12,7 @@ import axios from 'axios';
 import FilterDrawer from './components/FilterDrawer';
 import { SetupCalendar, Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/dist/style.css';
-
+const pinia = createPinia();
 // axios
 const instance = axios.create({
     baseURL: 'http://localhost:8000/wp-json/wpv/v1/'
@@ -38,6 +39,7 @@ const router = createRouter({
 const app = createApp(App);
 app.use(router);
 app.use(SetupCalendar, {})
+app.use(pinia);
 app.config.globalProperties.$axios = instance;
 app.component('notify', BaseNotification);
 app.component('Calendar', Calendar);
