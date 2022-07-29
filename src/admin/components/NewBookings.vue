@@ -92,12 +92,12 @@ methods: {
     },
     onUpdateNewBooking(bookingId) {
         console.log('bookingID', bookingId);
-        const index = this.bookings.findIndex((item) => {
+        const index = this.all.findIndex((item) => {
            return item.id == bookingId;
         });
         console.log('INDEX', index);
         if(index !== -1) {
-            this.bookings[index].new = 0;
+            this.all[index].new = 0;
             this.$emit('updateNewBookingsCount');
         }
     },

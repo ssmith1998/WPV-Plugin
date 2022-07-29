@@ -123,7 +123,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useBookingStore, ['bookingList', 'calendarList', 'disabledList']),
+    ...mapActions(useBookingStore, ['bookingList', 'calendarList', 'disabledList', 'addBooking', 'addDisabledBooking']),
     showNewBookings(val){
       this.showNew = val;
     },
@@ -132,7 +132,7 @@ export default {
       this.getBookings();
     },
     onUpdateBookingsCount() {
-      this.bookingsCount = this.bookingsCount - 1;
+      // this.getBookings();
     },
     onShowNew(checkVal) {
       this.showNew = checkVal;
@@ -229,16 +229,17 @@ export default {
      })
     },
     onUpdateState(resp) {
-      this.bookingsCount = this.bookingsCount + 1;
       const bookingStartDate = moment(resp.data.booking_start_date).add(1,'hours').toDate();
       const bookingEndDate = moment(resp.data.booking_end_date).add(1,'hours').toDate();
-       this.disabledDates.push({
+       const newDisabled = {
         id: resp.data.id,
         start: bookingStartDate, 
         end: bookingEndDate,
-      })
-      this.bookings.push(resp.data);
+      }
+      this.addDisabledBooking(newDisabled);
+      this.addBooking(resp.data);
       this.form = {}
+      // TODO add calendar bookings in state instead
       this.calendarBookings.push({
         key: resp.data.id,
         highlight: true,

@@ -24,6 +24,9 @@ export const useBookingStore = defineStore('booking', {
       addBooking(booking) {
         this.bookings.unshift(booking);
       },
+      addDisabledBooking(booking) {
+        this.disabled.push(booking);
+      },
       removeBooking(booking) {
         const indexFound = this.bookings.findIndex((bookingItem) => {
             return bookingItem.id === booking.id
