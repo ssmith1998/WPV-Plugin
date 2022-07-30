@@ -123,7 +123,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useBookingStore, ['bookingList', 'calendarList', 'disabledList', 'addBooking', 'addDisabledBooking', 'addCalendarBooking']),
+    ...mapActions(useBookingStore, ['bookingList', 'calendarList', 'disabledList', 'addBooking', 'addDisabledBooking', 'addCalendarBooking', 'updateCalendarBooking', 'updateDisabledBookings']),
     showNewBookings(val){
       this.showNew = val;
     },
@@ -176,39 +176,12 @@ export default {
       /**
        * Updating new bookings calendar
        */
-      console.log(this.disabledDates);
-      const disable = {
-        id: booking.id,
-        start: new Date(booking.booking_start_date), 
-        end: new Date(booking.booking_end_date),
-      };
-      const indexDisabled = this.disabledDates.findIndex((item) => {
-        return item.id === booking.id
-      })
-      if(indexDisabled !== -1) {
-        this.disabledDates[indexDisabled] = Object.assign(this.disabledDates[indexDisabled], disable);
-      }
+     this.updateDisabledBookings(booking);
 
       /**
        * updating main calendar
        */
-      const calendarBooking = {
-        key: booking.id,
-        highlight: true,
-        highlight: {
-            start: { fillMode: 'outline' },
-            base: { fillMode: 'light' },
-            end: { fillMode: 'outline' },
-        },
-        dates: {start: new Date(booking.booking_start_date), end: new Date(booking.booking_end_date)},
-        customData: booking,
-      }
-      const indexCalendar = this.calendarBookings.findIndex((item) => {
-        return item.key === booking.id
-      })
-      if(indexCalendar !== -1) {
-        this.calendarBookings[indexCalendar] = Object.assign(this.calendarBookings[indexCalendar], calendarBooking);
-      }
+      this.updateCalendarBooking(booking);
     },
     onSaveBooking() {
      this.form.booking_start = moment(this.form.range.start).add(1, 'hours').toDate();

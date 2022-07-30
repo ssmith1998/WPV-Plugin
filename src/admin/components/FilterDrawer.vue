@@ -66,6 +66,7 @@ methods: {
             name: '',
             contact_number: '',
         }
+        this.submitFilters();
   },
   submitFilters() {
         const filters  = this.filters;
@@ -78,6 +79,7 @@ methods: {
         contact_number: this.filters.contact_number,
         });
         this.$emit('filter', params.toString());
+        this.onCloseDrawer();
     },
     onCloseDrawer() {
       this.$emit('closeDrawer');

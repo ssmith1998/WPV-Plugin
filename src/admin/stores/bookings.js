@@ -70,7 +70,21 @@ export const useBookingStore = defineStore('booking', {
         if(bookingFoundIndex !== -1){
             this.calendarBookingList[bookingFoundIndex] = Object.assign(this.calendarBookingList[bookingFoundIndex], newCalenarBooking);
         }
+      },
+      updateDisabledBookings(booking) {
+        const disabled = {
+            id: booking.id,
+            start: new Date(booking.booking_start_date), 
+            end: new Date(booking.booking_end_date),
+        }
+      const bookingFoundIndex = this.disabled.findIndex((bookingItem) => {
+          return bookingItem.id === booking.id
+      });
+
+      if(bookingFoundIndex !== -1){
+          this.disabled[bookingFoundIndex] = Object.assign(this.disabled[bookingFoundIndex], disabled);
       }
+    }
     },
     getters: {
       approved: (state) => state.calendarBookingList.filter(booking => booking.customData.accepted === '1'),
