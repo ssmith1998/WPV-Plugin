@@ -55,7 +55,7 @@ data() {
     }
 },
 mounted() {
-  this.submitFilters();
+  // this.submitFilters();
 },
 methods: {
   onReset() {
