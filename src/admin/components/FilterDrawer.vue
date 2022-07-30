@@ -37,6 +37,9 @@ props: {
     filterOpen: {
         type: Boolean,
     },
+    showNew: {
+        type: Boolean,
+    },
 },
 data() {
     return {
@@ -50,10 +53,10 @@ data() {
     }
 },
 mounted() {
-  const date = moment().format('yyyy-MM-DD');
-  const endDate = moment().add(2, 'months').format('yyyy-MM-DD');
-  this.filters.date_start = date;
-  this.filters.date_end = endDate;
+  // const date = moment().format('yyyy-MM-DD');
+  // const endDate = moment().add(2, 'months').format('yyyy-MM-DD');
+  // this.filters.date_start = date;
+  // this.filters.date_end = endDate;
   this.submitFilters();
 },
 methods: {

@@ -41,7 +41,7 @@
         <button style="background:rgb(35, 35, 106);" @click="filterDrawerOpen = !filterDrawerOpen" class="ms-2 border p-2 border-none text-white"><i class="fas fa-filter"></i></button>
       </div>
       <new-bookings :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" @updateBookingCalendars="onUpdateCalendars" />
-      <filter-drawer :filterOpen="filterDrawerOpen" @filter="onFilterBookings" @closeDrawer="filterDrawerOpen = !filterDrawerOpen" />
+      <filter-drawer :showNew="showNew" :filterOpen="filterDrawerOpen" @filter="onFilterBookings" @closeDrawer="filterDrawerOpen = !filterDrawerOpen" />
     </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
       <h1 class="pb-1">Add Booking</h1>

@@ -87,7 +87,7 @@ computed: {
     background: rgb(0, 0, 0, 0.4);
     position: absolute;
     width: 100vw;
-    height: 100%;
+    height: 122vh;
     top: 0px;
     right: 0px;
 
