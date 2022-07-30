@@ -40,7 +40,7 @@
         <toggle label="Show New Bookings" @onChange="onShowNew" @showBookingsNew="showNewBookings" />
         <button style="background:rgb(35, 35, 106);" @click="filterDrawerOpen = !filterDrawerOpen" class="ms-2 border p-2 border-none text-white"><i class="fas fa-filter"></i></button>
       </div>
-      <new-bookings :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" @updateBookingCalendars="onUpdateCalendars" />
+      <new-bookings :pages="pages" :currentPage="currentPage" @pageChange="onPageChange" @updateNewBookingsCount="onUpdateBookingsCount" />
       <filter-drawer :showNew="showNew" :filterOpen="filterDrawerOpen" @filter="onFilterBookings" @closeDrawer="filterDrawerOpen = !filterDrawerOpen" />
     </div>
     <div data-id="booking" class="pickerWrapper d-none tabContent">
@@ -171,17 +171,6 @@ export default {
         this.pages = resp.data.number_of_pages;
         // this.bookingsCount = response.data.newBookings;
         this.bookingList(resp.data.bookings); 
-    },
-    onUpdateCalendars(booking) {
-      /**
-       * Updating new bookings calendar
-       */
-     this.updateDisabledBookings(booking);
-
-      /**
-       * updating main calendar
-       */
-      this.updateCalendarBooking(booking);
     },
     onSaveBooking() {
      this.form.booking_start = moment(this.form.range.start).add(1, 'hours').toDate();

@@ -33,6 +33,8 @@
 
 <script>
 import moment, { isMoment } from 'moment';
+import { useBookingStore } from '../stores/bookings';
+import { mapState, mapActions } from 'pinia'
 export default {
 name: 'BookingModal',
 props: {
@@ -52,6 +54,7 @@ data() {
     }
 },
 methods: {
+     ...mapActions(useBookingStore, ['updateDisabledBookings', 'updateCalendarBooking']),
     onCloseModal() {
         this.$emit('closeModal');
     },
@@ -70,8 +73,19 @@ methods: {
             color: '#ffffff'
         })  
             console.log("RESPONSE", response);
-            this.$emit('updatedCalendars', response.data);
+            this.onUpdateCalendars(response.data);
         });
+    },
+    onUpdateCalendars(booking) {
+      /**
+       * Updating new bookings calendar
+       */
+     this.updateDisabledBookings(booking);
+
+      /**
+       * updating main calendar
+       */
+      this.updateCalendarBooking(booking);
     },
 },
 computed: {

@@ -30,7 +30,7 @@
   </tbody>
 </table>
 <pagination v-if="pages" :pages="pages" @pageChange="onPageChange" :currentPage="currentPage" />
-<booking-modal :isOpen="modalOpen" :booking="currentBooking" @closeModal="modalOpen = false" @updatedCalendars="onUpdateCalendars" />
+<booking-modal :isOpen="modalOpen" :booking="currentBooking" @closeModal="modalOpen = false" />
 </div>
 </template>
 
@@ -70,9 +70,6 @@ methods: {
     ...mapActions(useBookingStore, ['updateBooking']),
     isAccepted(booking) {
         return booking.accepted === '1' ? true : false
-    },
-    onUpdateCalendars(booking) {
-        this.$emit('updateBookingCalendars', booking);
     },
     onPageChange(page) {
         this.$emit('pageChange', page);
