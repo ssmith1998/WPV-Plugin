@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import moment, { isMoment } from 'moment';
 import { useBookingStore } from '../stores/bookings';
 import { mapState, mapActions } from 'pinia'
 export default {
