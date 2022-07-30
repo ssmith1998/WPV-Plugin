@@ -168,9 +168,21 @@ class Settings_Route extends WP_REST_Controller {
         $outputType = 'ARRAY_A';
           if($bookingTypeQuery === "true" && $dateStart && $dateEnd ){
             $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery AND DATE(booking_start_date) >= '$dateStart' AND DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%'";
-        }else if($dateStart && $dateEnd){
+        }else if($bookingTypeQuery === "true" && $dateStart && !$dateEnd ){
+            $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery AND DATE(booking_start_date) >= '$dateStart' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%'";
+        }else if($bookingTypeQuery === "true" && $dateEnd && !$dateStart ){
+            $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery AND DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%'";
+        }
+        else if($dateStart && $dateEnd){
             $query = "SELECT * FROM $this->bookingsTable WHERE DATE(booking_start_date) >= '$dateStart' AND DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%'";
-        }else if($bookingTypeQuery === "true"){
+        }
+        else if($dateStart && !$dateEnd){
+            $query = "SELECT * FROM $this->bookingsTable WHERE DATE(booking_start_date) >= '$dateStart' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%'";
+        }
+        else if($dateEnd && !$dateStart){
+            $query = "SELECT * FROM $this->bookingsTable WHERE DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%'";
+        }
+        else if($bookingTypeQuery === "true"){
             $query = "SELECT * FROM $this->bookingsTable WHERE new = $bookingTypeQuery AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%'";
 
         }else{
@@ -215,9 +227,22 @@ class Settings_Route extends WP_REST_Controller {
 
         if($new === "true" && $dateStart && $dateEnd ){
             $query = "SELECT * FROM $this->bookingsTable WHERE new = $new AND DATE(booking_start_date) >= '$dateStart' AND DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%' LIMIT $first_result, $per_page";
-        }else if($dateStart && $dateEnd){
+        }else if($new === "true" && $dateStart && !$dateEnd){
+            $query = "SELECT * FROM $this->bookingsTable WHERE new = $new AND DATE(booking_start_date) >= '$dateStart' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%' LIMIT $first_result, $per_page";
+            
+        }else if($new === "true" && !$dateStart && $dateEnd){
+            $query = "SELECT * FROM $this->bookingsTable WHERE new = $new AND DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%' LIMIT $first_result, $per_page";
+            
+        }
+        else if($dateStart && $dateEnd){
             $query = "SELECT * FROM $this->bookingsTable WHERE DATE(booking_start_date) >= '$dateStart' AND DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%' LIMIT $first_result, $per_page";
-        }else if($new === "true"){
+        }else if(!$dateStart && $dateEnd){
+            $query = "SELECT * FROM $this->bookingsTable WHERE DATE(booking_end_date) <= '$dateEnd' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%' LIMIT $first_result, $per_page";
+        }
+        else if($dateStart && !$dateEnd){
+            $query = "SELECT * FROM $this->bookingsTable WHERE DATE(booking_start_date) >= '$dateStart' AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%' LIMIT $first_result, $per_page";
+        }
+        else if($new === "true"){
             $query = "SELECT * FROM $this->bookingsTable WHERE new = $new AND email LIKE '%$email%' AND booking_name LIKE '%$name%' AND contact_number LIKE '%$contactNumber%' LIMIT $first_result, $per_page";
 
         }else{

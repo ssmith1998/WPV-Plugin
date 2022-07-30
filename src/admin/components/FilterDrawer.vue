@@ -23,8 +23,10 @@
             <label for="contact_number" class="text-white">Contact Number</label>
             <input v-model="filters.contact_number" type="number" id="contact_number" class="form-control">
           </div>
-
+        <div class="d-flex">
+          <button @click="onReset" class="btn btn-outline-light mt-3 me-2 w-75">Reset Filters</button>
           <button @click="submitFilters" class="btn btn-light mt-3 mx-auto d-block w-75">Apply Filters</button>
+        </div>
       </div>
   </div>
 </template>
@@ -53,14 +55,19 @@ data() {
     }
 },
 mounted() {
-  // const date = moment().format('yyyy-MM-DD');
-  // const endDate = moment().add(2, 'months').format('yyyy-MM-DD');
-  // this.filters.date_start = date;
-  // this.filters.date_end = endDate;
   this.submitFilters();
 },
 methods: {
-    submitFilters() {
+  onReset() {
+   this.filters = {
+            date_start: '',
+            date_end: '',
+            email: '',
+            name: '',
+            contact_number: '',
+        }
+  },
+  submitFilters() {
         const filters  = this.filters;
         console.log(filters);
         const params = new URLSearchParams({
