@@ -121,7 +121,7 @@ class Settings_Route extends WP_REST_Controller {
         $valueTypes = ['%d'];
         $this->updateBooking($this->bookingsTable, $data, $where, $valueTypes);
 
-        return $bookingId;
+        return $this->retrieveNewBooking($bookingId);
      }
 
     /**
@@ -240,22 +240,6 @@ class Settings_Route extends WP_REST_Controller {
           ];
           $format = ['%s', '%s', '%s', '%s', '%s', '%s', '%s'];
           $wpdb->insert($table,$data,$format);
-
-        // $wpdb->query(
-        //     $wpdb->prepare(
-        //     "INSERT INTO $table
-        //     (id, new, booking_start_date, booking_end_date, booking_name, email, contact_number, notes)
-        //     VALUES ( %d, %d, %s,%d )",
-        //     array(
-        //         $bookingStart,
-        //         $bookingEnd,
-        //         $bookingName,
-        //         $email,
-        //         $contactNumber,
-        //         $notes,
-        //     )
-        //     )
-        //     );
 
 
         return $this->retrieveNewBooking($wpdb->insert_id);

@@ -57,7 +57,7 @@ props: {
     },
 },
 computed: {
- ...mapState(useBookingStore, ['all']),
+ ...mapState(useBookingStore, ['all', 'updateCalendarBooking']),
 },
 data(){
     return {
@@ -67,6 +67,7 @@ data(){
     }
 },
 methods: {
+    ...mapActions(useBookingStore, ['updateBooking']),
     isAccepted(booking) {
         return booking.accepted === '1' ? true : false
     },
@@ -107,6 +108,8 @@ methods: {
     },
     async onApproveBooking(bookingId) {
         const approved = await this.$axios.post(`/bookings/${bookingId}/approve`);
+        this.updateBooking(approved.data);
+        this.updateCalendarBooking(approved.data);
         console.log(approved);
     },
 },

@@ -1,6 +1,6 @@
 <template>
   <div class="backDrop" v-show="isOpen">
-      <div class="modalWrapper w-100 h-100 d-flex justify-content-center align-items-center">
+      <div class="modalWrapper w-100 h-75 d-flex justify-content-center align-items-center">
         <div class="card p-5 w-75">
             <i class="fas fa-times text-danger" @click="onCloseModal"></i>
             <form  class="form">
@@ -87,7 +87,7 @@ computed: {
     background: rgb(0, 0, 0, 0.4);
     position: absolute;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     top: 0px;
     right: 0px;
 

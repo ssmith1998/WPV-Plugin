@@ -27,6 +27,9 @@ export const useBookingStore = defineStore('booking', {
       addDisabledBooking(booking) {
         this.disabled.push(booking);
       },
+      addCalendarBooking(booking) {
+        this.calendarBookingList.push(booking);
+      },
       removeBooking(booking) {
         const indexFound = this.bookings.findIndex((bookingItem) => {
             return bookingItem.id === booking.id
@@ -44,10 +47,33 @@ export const useBookingStore = defineStore('booking', {
         if(bookingFoundIndex !== -1){
             this.bookings[bookingFoundIndex] = Object.assign(this.bookings[bookingFoundIndex], booking);
         }
+      },
+      updateCalendarBooking(booking) {
+          const newCalenarBooking = {
+            key: booking.id,
+            highlight: true,
+            highlight: {
+                start: { fillMode: 'outline' },
+                base: { fillMode: 'light' },
+                end: { fillMode: 'outline' },
+            },
+            popover: {
+                        label: `${booking.booking_name} - ${booking.email}`
+                    },
+            dates: {start: new Date(booking.booking_start_date), end: new Date(booking.booking_end_date)},
+            customData: booking,
+          }
+        const bookingFoundIndex = this.calendarBookingList.findIndex((bookingItem) => {
+            return bookingItem.customData.id === booking.id
+        });
+
+        if(bookingFoundIndex !== -1){
+            this.calendarBookingList[bookingFoundIndex] = Object.assign(this.calendarBookingList[bookingFoundIndex], newCalenarBooking);
+        }
       }
     },
     getters: {
-      approved: (state) => state.bookings.filter(booking => booking.accepted === '1'),
+      approved: (state) => state.calendarBookingList.filter(booking => booking.customData.accepted === '1'),
       calendarBookings: (state) => state.calendarBookingList.filter(booking => booking.customData.accepted === '1'),
       unapproved: (state) => state.bookings.filter(booking => booking.accepted !== '1'),
       all: (state) => state.bookings,

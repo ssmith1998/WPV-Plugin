@@ -123,7 +123,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useBookingStore, ['bookingList', 'calendarList', 'disabledList', 'addBooking', 'addDisabledBooking']),
+    ...mapActions(useBookingStore, ['bookingList', 'calendarList', 'disabledList', 'addBooking', 'addDisabledBooking', 'addCalendarBooking']),
     showNewBookings(val){
       this.showNew = val;
     },
@@ -238,9 +238,7 @@ export default {
       }
       this.addDisabledBooking(newDisabled);
       this.addBooking(resp.data);
-      this.form = {}
-      // TODO add calendar bookings in state instead
-      this.calendarBookings.push({
+      this.addCalendarBooking({
         key: resp.data.id,
         highlight: true,
         highlight: {
@@ -254,7 +252,23 @@ export default {
         dates: {start: new Date(resp.data.booking_start_date), end: new Date(resp.data.booking_end_date)},
         customData: resp.data,
       });
-      console.log('calendar', this.calendarBookings);
+      this.form = {}
+      // TODO add calendar bookings in state instead
+      // this.calendarBookings.push({
+      //   key: resp.data.id,
+      //   highlight: true,
+      //   highlight: {
+      //       start: { fillMode: 'outline' },
+      //       base: { fillMode: 'light' },
+      //       end: { fillMode: 'outline' },
+      //   },
+      //   popover: {
+      //               label: `${resp.data.booking_name} - ${resp.data.email}`
+      //           },
+      //   dates: {start: new Date(resp.data.booking_start_date), end: new Date(resp.data.booking_end_date)},
+      //   customData: resp.data,
+      // });
+      // console.log('calendar', this.calendarBookings);
     },
     switchActiveTab(event) {
       const tabs = document.querySelectorAll(".tab");
